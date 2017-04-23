@@ -6,9 +6,9 @@
  * Time: 2:08 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\form\widgets\CheckboxInput;
+use Eddmash\PowerOrm\Form\Widgets\CheckboxInput;
 
 /**
  * Creates a :
@@ -17,7 +17,7 @@ use eddmash\powerorm\form\widgets\CheckboxInput;
  *       Validates that the value is True (e.g. the check box is checked) if the field has required=True.
  *
  * Class BooleanField
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrmForm\form\fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

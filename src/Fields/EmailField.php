@@ -6,9 +6,9 @@
  * Time: 2:07 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\form\widgets\EmailInput;
+use Eddmash\PowerOrm\Form\Widgets\EmailInput;
 
 /**
  * Creates an :
@@ -20,7 +20,7 @@ use eddmash\powerorm\form\widgets\EmailInput;
  * If provided, these arguments ensure that the string is at most or at least the given length.
  *
  * Class EmailField
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrm\Form\Fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

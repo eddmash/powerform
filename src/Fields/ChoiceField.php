@@ -6,11 +6,11 @@
  * Time: 2:08 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\form\widgets\MultipleCheckboxes;
-use eddmash\powerorm\form\widgets\Select;
-use eddmash\powerorm\form\widgets\SelectMultiple;
+use Eddmash\PowerOrm\Form\Widgets\MultipleCheckboxes;
+use Eddmash\PowerOrm\Form\Widgets\Select;
+use Eddmash\PowerOrm\Form\Widgets\SelectMultiple;
 
 /**
  * Creates a :
@@ -32,7 +32,7 @@ use eddmash\powerorm\form\widgets\SelectMultiple;
  *              ];
  *
  * Class ChoiceField
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrm\Form\Fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

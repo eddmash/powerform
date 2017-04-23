@@ -6,13 +6,13 @@
  * Time: 2:13 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
  * Similar to Select, but allows multiple selection: <select multiple='multiple'>...</select>
  *
  * Class SelectMultiple
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

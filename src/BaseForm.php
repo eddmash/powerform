@@ -1,21 +1,21 @@
 <?php
 
-namespace eddmash\powerorm\form;
+namespace Eddmash\PowerOrm\Form;
 
-use eddmash\powerorm\Contributor;
-use eddmash\powerorm\exceptions\FormNotReadyException;
-use eddmash\powerorm\exceptions\KeyError;
-use eddmash\powerorm\exceptions\ValidationError;
-use eddmash\powerorm\Object;
+use Eddmash\PowerOrm\ContributorInterface;
+use Eddmash\PowerOrm\Exception\FormNotReadyException;
+use Eddmash\PowerOrm\Exception\KeyError;
+use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\BaseObject;
 use Orm;
 
 /**
  * Class Form
- * @package eddmash\powerorm\form
+ * @package Eddmash\PowerOrm\form
  * @since 1.0.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
-class BaseForm extends Object implements \IteratorAggregate
+class BaseForm extends BaseObject implements \IteratorAggregate
 {
     const NON_FIELD_ERRORS = '_all_';
 

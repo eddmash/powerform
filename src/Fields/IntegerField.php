@@ -6,9 +6,9 @@
  * Time: 2:08 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\form\widgets\NumberInput;
+use Eddmash\PowerOrm\Form\Widgets\NumberInput;
 
 /**
  * Creates a:
@@ -25,7 +25,7 @@ use eddmash\powerorm\form\widgets\NumberInput;
  * These control the range of values permitted in the field.
  *
  * Class IntegerField
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrm\Form\Fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

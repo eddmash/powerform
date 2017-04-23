@@ -6,7 +6,7 @@
  * Time: 2:13 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
  * This creates a single checkbox on the fields, to create more than one use {@see MultipleCheckboxes}
@@ -14,7 +14,7 @@ namespace eddmash\powerorm\form\widgets;
  * Checkbox: <input type='checkbox' ...>
  *
  * Class CheckboxInput
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

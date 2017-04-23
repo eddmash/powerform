@@ -6,7 +6,7 @@
  * Time: 10:13 AM
  */
 
-namespace eddmash\powerorm\form;
+namespace Eddmash\PowerOrm\Form;
 
 use Orm;
 

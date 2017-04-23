@@ -6,14 +6,14 @@
  * Time: 2:12 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
  * Hidden input: <input type='hidden' ...>
  *
  * Note that there also is a MultipleHiddenInput widget that encapsulates a set of hidden input elements.
  *
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

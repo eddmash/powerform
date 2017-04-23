@@ -6,9 +6,9 @@
  * Time: 2:09 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\form\widgets\SelectMultiple;
+use Eddmash\PowerOrm\Form\Widgets\SelectMultiple;
 
 class MultipleChoiceField extends ChoiceField
 {

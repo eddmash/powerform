@@ -6,7 +6,7 @@
  * Time: 2:07 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
 /**
  * Creates a:
@@ -17,7 +17,7 @@ namespace eddmash\powerorm\form\fields;
  * This field is intended for use in representing a model SlugField in forms.
  *
  * Class SlugField
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrm\Form\Fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

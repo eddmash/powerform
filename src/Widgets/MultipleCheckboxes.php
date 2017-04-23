@@ -6,13 +6,13 @@
  * Time: 2:15 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
  * Similar to SelectMultiple, but rendered as a list of check buttons:
  *
  * Class CheckboxSelectMultiple
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

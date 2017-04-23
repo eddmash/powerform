@@ -1,6 +1,6 @@
 <?php
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
     /**
      * Created by http://eddmash.com
@@ -22,7 +22,7 @@ namespace eddmash\powerorm\form\fields;
  *  If provided, these arguments ensure that the string is at most or at least the given length.
  *
  * Class CharField
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrm\Form\Fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

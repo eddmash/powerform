@@ -6,16 +6,16 @@
  * Time: 2:11 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
- * Text input: <input type="text" ...>
+ * Text input: <input type="email" ...>
  *
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
-class TextInput extends Input
+class EmailInput extends TextInput
 {
-    public $input_type = 'text';
+    public $input_type = 'email';
 }

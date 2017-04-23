@@ -5,15 +5,15 @@
  * Time: 3:55 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
-use eddmash\powerorm\exceptions\NotImplemented;
-use eddmash\powerorm\Object;
+use Eddmash\PowerOrm\Exception\NotImplemented;
+use Eddmash\PowerOrm\BaseObject;
 
 /**
  * base class for all widgets, should never initialized
  * Class Widget
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

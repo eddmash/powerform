@@ -6,11 +6,11 @@
  * Time: 2:09 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\exceptions\TypeError;
-use eddmash\powerorm\exceptions\ValidationError;
-use eddmash\powerorm\exceptions\ValueError;
+use Eddmash\PowerOrm\Exception\TypeError;
+use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValueError;
 
 class TypedChoiceField extends ChoiceField
 {

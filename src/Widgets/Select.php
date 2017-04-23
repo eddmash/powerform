@@ -6,7 +6,7 @@
  * Time: 2:13 PM
  */
 
-namespace eddmash\powerorm\form\widgets;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
  *
@@ -20,7 +20,7 @@ namespace eddmash\powerorm\form\widgets;
  *      If it does, it will override anything you set here when the attribute is updated on the Field.
  *
  * Class Select
- * @package eddmash\powerorm\form\widgets
+ * @package Eddmash\PowerOrm\Form\Widgets
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */

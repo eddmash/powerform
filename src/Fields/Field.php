@@ -5,13 +5,13 @@
  * Time: 3:55 PM
  */
 
-namespace eddmash\powerorm\form\fields;
+namespace Eddmash\PowerOrm\Form\Fields;
 
-use eddmash\powerorm\Contributor;
-use eddmash\powerorm\exceptions\ValidationError;
-use eddmash\powerorm\exceptions\ValueError;
-use eddmash\powerorm\form\widgets\TextInput;
-use eddmash\powerorm\Object;
+use Eddmash\PowerOrm\ContributorInterface;
+use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValueError;
+use Eddmash\PowerOrm\Form\Widgets\TextInput;
+use Eddmash\PowerOrm\BaseObject;
 
 /**
  * Base class for all form fields, should nevers be initialized, use its subclasses.
@@ -39,7 +39,7 @@ use eddmash\powerorm\Object;
  *             is its widget is shown in the form but not editable.
  * label_suffix -- Suffix to be added to the label. Overrides
  *
- * @package eddmash\powerorm\form\fields
+ * @package Eddmash\PowerOrm\Form\Fields
  * @since 1.1.0
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
