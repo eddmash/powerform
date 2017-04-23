@@ -1,7 +1,6 @@
 <?php
+namespace Eddmash\PowerOrm\Form;
 
-use Eddmash\PowerOrm\form\BaseForm;
-use Eddmash\PowerOrm\form\BaseModelForm;
 use Eddmash\PowerOrm\Form\Fields as FormFields;
 use Eddmash\PowerOrm\Form\Widgets as FormWidgets;
 
@@ -106,20 +105,4 @@ trait FormFieldTrait
     {
         return new FormWidgets\MultipleCheckboxes($attrs);
     }
-}
-
-/**
- * Class Form
- * @package Eddmash\PowerOrm\form
- * @since 1.0.0
- * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
- */
-class PForm extends BaseForm
-{
-    use form;
-}
-
-class PModelForm extends BaseModelForm
-{
-    use form;
 }

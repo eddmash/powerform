@@ -2,12 +2,10 @@
 
 namespace Eddmash\PowerOrm\Form;
 
-use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\BaseObject;
-use Orm;
 
 /**
  * Class Form
@@ -17,6 +15,7 @@ use Orm;
  */
 class BaseForm extends BaseObject implements \IteratorAggregate
 {
+    use FormFieldTrait;
     const NON_FIELD_ERRORS = '_all_';
 
     /**
