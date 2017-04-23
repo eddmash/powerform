@@ -1,0 +1,39 @@
+{
+  "name": "eddmash/powerormform",
+  "type": "library",
+  "keywords": [
+    "orm",
+    "php",
+    "form"
+  ],
+  "description": "Provides form that make it easy to work with powerorm models",
+  "homepage": "https://github.com/eddmash/powerormform",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "EDDILBERT MACHARIA",
+      "email": "edd.cowan@gmail.com",
+      "homepage": "http://eddmash.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "eddmash/powerorm": "@dev"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Eddmash\\PowerOrmForm\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
+  "support": {
+    "issues": "https://github.com/eddmash/powerormorm/issues"
+  }
+}
