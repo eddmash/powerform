@@ -2,7 +2,7 @@
 /**
  * Created by eddmash <http://eddmash.com>
  * Date: 6/23/16
- * Time: 3:55 PM
+ * Time: 3:55 PM.
  */
 
 namespace Eddmash\PowerOrm\Form\Widgets;
@@ -12,12 +12,13 @@ use Eddmash\PowerOrm\BaseObject;
 
 /**
  * base class for all widgets, should never initialized
- * Class Widget
- * @package Eddmash\PowerOrm\Form\Widgets
+ * Class Widget.
+ *
  * @since 1.1.0
+ *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
-abstract class Widget extends Object
+abstract class Widget extends BaseObject
 {
     public $attrs;
     public $needs_multipart_form = false;
@@ -27,6 +28,14 @@ abstract class Widget extends Object
     {
         $this->attrs = $attrs;
         $this->init();
+    }
+
+    /**
+     * Initializes the object.
+     * This method is invoked at the end of the constructor after the object is initialized ;.
+     */
+    public function init()
+    {
     }
 
     public static function instance($attrs = [], $kwargs = [])
@@ -51,10 +60,14 @@ abstract class Widget extends Object
     }
 
     /**
-     * Prepare value for use on HTML widget
+     * Prepare value for use on HTML widget.
+     *
      * @param $value
+     *
      * @return mixed
+     *
      * @since 1.1.0
+     *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
     public function prepare_value($value)
@@ -69,7 +82,7 @@ abstract class Widget extends Object
 
     public function is_hidden()
     {
-        return ($this->has_property('input_type')) ? $this->input_type === 'hidden' : false;
+        return (property_exists($this, 'input_type')) ? $this->input_type === 'hidden' : false;
     }
 
     public function flat_attrs($attrs)
@@ -77,7 +90,7 @@ abstract class Widget extends Object
         $str_attrs = '';
         foreach ($attrs as $key => $attr) :
             if ($attrs === true || $attrs === false):
-                $str_attrs .= ' ' . $key;
+                $str_attrs .= ' '.$key;
             else:
                 $str_attrs .= sprintf(' %1$s = %2$s', $key, $attr);
             endif;

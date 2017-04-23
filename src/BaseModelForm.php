@@ -3,16 +3,33 @@
  * Created by http://eddmash.com
  * User: eddmash
  * Date: 7/3/16
- * Time: 10:13 AM
+ * Time: 10:13 AM.
  */
 
 namespace Eddmash\PowerOrm\Form;
 
+use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Model\Model;
 use Orm;
 
-function fields_from_model($model, $required_fields, $excludes, $widgets, $labels, $help_texts, $field_classes)
+/**
+ * @param Model $model
+ * @param $required_fields
+ * @param $excludes
+ * @param $widgets
+ * @param $labels
+ * @param $helpTexts
+ * @param $field_classes
+ *
+ * @return array
+ *
+ * @since 1.1.0
+ *
+ * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+ */
+function fields_from_model(Model $model, $required_fields, $excludes, $widgets, $labels, $helpTexts, $field_classes)
 {
-    $model_fields = $model->meta->fields;
+    $model_fields = $model->meta->getConcreteFields();
     $fields = [];
     foreach ($model_fields as $name => $obj) :
         if (in_array($name, $excludes)):
@@ -32,9 +49,8 @@ function fields_from_model($model, $required_fields, $excludes, $widgets, $label
             $kwargs['label'] = $labels[$name];
         endif;
 
-
-        if (!empty($help_texts) && array_key_exists($name, $help_texts)):
-            $kwargs['help_text'] = $help_texts[$name];
+        if (!empty($helpTexts) && array_key_exists($name, $helpTexts)):
+            $kwargs['helpText'] = $helpTexts[$name];
         endif;
 
         if (!empty($field_classes) && array_key_exists($name, $field_classes)):
@@ -43,7 +59,6 @@ function fields_from_model($model, $required_fields, $excludes, $widgets, $label
 
         $fields[$name] = $obj->formfield();
     endforeach;
-
 
     return $fields;
 }
@@ -55,13 +70,14 @@ class BaseModelForm extends BaseForm
     protected $excludes = [];
     protected $labels = [];
     protected $widgets = [];
-    protected $help_texts = [];
+    protected $helpTexts = [];
     protected $field_classes = [];
 
     public function setup()
     {
-        $fields = fields_from_model($this->model, $this->fields, $this->excludes,
-            $this->widgets, $this->labels, $this->help_texts, $this->field_classes
+        $model = BaseOrm::getRegistry()->getModel($this->model);
+        $fields = fields_from_model($model, $this->fields, $this->excludes,
+            $this->widgets, $this->labels, $this->helpTexts, $this->field_classes
         );
 
         foreach ($fields as $name => $value) :
@@ -95,36 +111,42 @@ class BaseModelForm extends BaseForm
     public function only($fields = [])
     {
         $this->fields = array_merge($this->fields, $fields);
+
         return $this;
     }
 
     public function exclude($excludes = [])
     {
         $this->excludes = array_merge($this->excludes, $excludes);
+
         return $this;
     }
 
     public function labels($labels = [])
     {
         $this->labels = array_merge($this->labels, $labels);
+
         return $this;
     }
 
     public function widgets($widgets = [])
     {
         $this->widgets = array_merge($this->widgets, $widgets);
+
         return $this;
     }
 
-    public function help_texts($help_texts = [])
+    public function helpTexts($helpTexts = [])
     {
-        $this->help_texts = array_merge($this->help_texts, $help_texts);
+        $this->helpTexts = array_merge($this->helpTexts, $helpTexts);
+
         return $this;
     }
 
     public function field_classes($field_classes = [])
     {
         $this->field_classes = array_merge($this->field_classes, $field_classes);
+
         return $this;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\Form\Fields as FormFields;
@@ -36,15 +37,11 @@ trait FormFieldTrait
         return new FormFields\MultipleChoiceField($attrs);
     }
 
-
-
-
     // ******************************************************************************
 
     // ******************************* Widget ***************************************
 
     // ******************************************************************************
-
 
     public static function TextInput($attrs = [])
     {

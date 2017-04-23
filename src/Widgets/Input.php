@@ -3,16 +3,17 @@
  * Created by http://eddmash.com
  * User: eddmash
  * Date: 7/16/16
- * Time: 2:10 PM
+ * Time: 2:10 PM.
  */
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
  * base class for all input widgets, should never initialized
- * Class Input
- * @package Eddmash\PowerOrm\Form\Widgets
+ * Class Input.
+ *
  * @since 1.1.0
+ *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
 abstract class Input extends Widget

@@ -3,7 +3,7 @@
  * Created by http://eddmash.com
  * User: eddmash
  * Date: 7/16/16
- * Time: 2:08 PM
+ * Time: 2:08 PM.
  */
 
 namespace Eddmash\PowerOrm\Form\Fields;
@@ -29,11 +29,12 @@ use Eddmash\PowerOrm\Form\Widgets\SelectMultiple;
  *                      'dvd'=> 'DVD',
  *                  ],
  *                  'unknown'=> 'Unknown',
- *              ];
+ *              ];.
  *
  * Class ChoiceField
- * @package Eddmash\PowerOrm\Form\Fields
+ *
  * @since 1.1.0
+ *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
 class ChoiceField extends Field
@@ -52,6 +53,7 @@ class ChoiceField extends Field
             return sprintf('%s[]', $this->name);
 
         endif;
+
         return parent::get_html_name();
     }
 

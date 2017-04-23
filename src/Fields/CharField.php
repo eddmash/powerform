@@ -2,12 +2,12 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
-    /**
-     * Created by http://eddmash.com
-     * User: eddmash
-     * Date: 7/16/16
-     * Time: 2:05 PM
-     */
+/**
+ * Created by http://eddmash.com
+ * User: eddmash
+ * Date: 7/16/16
+ * Time: 2:05 PM.
+ */
 
 /**
  * Creates a :
@@ -22,8 +22,9 @@ namespace Eddmash\PowerOrm\Form\Fields;
  *  If provided, these arguments ensure that the string is at most or at least the given length.
  *
  * Class CharField
- * @package Eddmash\PowerOrm\Form\Fields
+ *
  * @since 1.1.0
+ *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
 class CharField extends Field

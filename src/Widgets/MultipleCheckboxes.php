@@ -3,17 +3,18 @@
  * Created by http://eddmash.com
  * User: eddmash
  * Date: 7/16/16
- * Time: 2:15 PM
+ * Time: 2:15 PM.
  */
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
 /**
- * Similar to SelectMultiple, but rendered as a list of check buttons:
+ * Similar to SelectMultiple, but rendered as a list of check buttons:.
  *
  * Class CheckboxSelectMultiple
- * @package Eddmash\PowerOrm\Form\Widgets
+ *
  * @since 1.1.0
+ *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
 class MultipleCheckboxes extends ChoiceInputFields
@@ -24,8 +25,9 @@ class MultipleCheckboxes extends ChoiceInputFields
     {
         $selected = [];
         foreach ($selected_choices as $choice) :
-            $selected[] = (string)$choice;
+            $selected[] = (string) $choice;
         endforeach;
+
         return $selected;
     }
 }

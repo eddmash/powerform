@@ -3,7 +3,7 @@
  * Created by http://eddmash.com
  * User: eddmash
  * Date: 7/16/16
- * Time: 2:08 PM
+ * Time: 2:08 PM.
  */
 
 namespace Eddmash\PowerOrm\Form\Fields;
@@ -17,8 +17,9 @@ use Eddmash\PowerOrm\Form\Widgets\CheckboxInput;
  *       Validates that the value is True (e.g. the check box is checked) if the field has required=True.
  *
  * Class BooleanField
- * @package Eddmash\PowerOrmForm\form\fields
+ *
  * @since 1.1.0
+ *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
 class BooleanField extends Field
