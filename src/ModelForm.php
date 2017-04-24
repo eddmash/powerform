@@ -27,7 +27,7 @@ use Orm;
  *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
-function fields_from_model(Model $model, $required_fields, $excludes, $widgets, $labels, $helpTexts, $field_classes)
+function fieldsFromModel(Model $model, $required_fields, $excludes, $widgets, $labels, $helpTexts, $field_classes)
 {
     $model_fields = $model->meta->getConcreteFields();
     $fields = [];
@@ -63,9 +63,9 @@ function fields_from_model(Model $model, $required_fields, $excludes, $widgets, 
     return $fields;
 }
 
-class BaseModelForm extends BaseForm
+abstract class ModelForm extends Form
 {
-    public $model;
+    protected $modelClass;
     protected $fields = [];
     protected $excludes = [];
     protected $labels = [];
@@ -75,9 +75,14 @@ class BaseModelForm extends BaseForm
 
     public function setup()
     {
-        $model = BaseOrm::getRegistry()->getModel($this->model);
-        $fields = fields_from_model($model, $this->fields, $this->excludes,
-            $this->widgets, $this->labels, $this->helpTexts, $this->field_classes
+        $fields = fieldsFromModel(
+            $this->getModel(),
+            $this->fields,
+            $this->excludes,
+            $this->widgets,
+            $this->labels,
+            $this->helpTexts,
+            $this->field_classes
         );
 
         foreach ($fields as $name => $value) :
@@ -92,42 +97,31 @@ class BaseModelForm extends BaseForm
         parent::setup();
     }
 
-    public function custom()
-    {
-    }
 
-    public function model($model = null)
-    {
-        $this->model = (!empty($model)) ? $model : $this->model;
+//    public function custom()
+//    {
+//    }
+//
+//    public function only($fields = [])
+//    {
+//        $this->fields = array_merge($this->fields, $fields);
+//
+//        return $this;
+//    }
+//
+//    public function exclude($excludes = [])
+//    {
+//        $this->excludes = array_merge($this->excludes, $excludes);
+//
+//        return $this;
+//    }
 
-        if (is_string($this->model)):
-            Orm::ci_instance()->load->model($this->model);
-            $this->model = Orm::ci_instance()->{$this->model};
-        endif;
-
-        return $this;
-    }
-
-    public function only($fields = [])
-    {
-        $this->fields = array_merge($this->fields, $fields);
-
-        return $this;
-    }
-
-    public function exclude($excludes = [])
-    {
-        $this->excludes = array_merge($this->excludes, $excludes);
-
-        return $this;
-    }
-
-    public function labels($labels = [])
-    {
-        $this->labels = array_merge($this->labels, $labels);
-
-        return $this;
-    }
+//    public function labels($labels = [])
+//    {
+//        $this->labels = array_merge($this->labels, $labels);
+//
+//        return $this;
+//    }
 
     public function widgets($widgets = [])
     {
@@ -148,5 +142,26 @@ class BaseModelForm extends BaseForm
         $this->field_classes = array_merge($this->field_classes, $field_classes);
 
         return $this;
+    }
+
+    /**
+     * Returns an instance of the model.
+     *
+     * @return Model
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function getModel()
+    {
+        return BaseOrm::getRegistry()->getModel($this->getModelClass());;
+    }
+
+    /**
+     * Returns the Model class to use in this form.
+     * @return mixed
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function getModelClass()
+    {
+        return $this->modelClass;
     }
 }

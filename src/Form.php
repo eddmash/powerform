@@ -2,11 +2,11 @@
 
 namespace Eddmash\PowerOrm\Form;
 
+use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
-use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\Form\Fields\Field;
 
 /**
@@ -16,7 +16,7 @@ use Eddmash\PowerOrm\Form\Fields\Field;
  *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
-class BaseForm extends BaseObject implements \IteratorAggregate
+abstract class Form extends BaseObject implements \IteratorAggregate
 {
     use FormFieldTrait;
     const NON_FIELD_ERRORS = '_all_';
@@ -62,6 +62,10 @@ class BaseForm extends BaseObject implements \IteratorAggregate
     public $initial = [];
     public $data = [];
     public $is_bound = false;
+
+    /**
+     * @var Field[]
+     */
     protected $fields = [];
     public $validation_rules = [];
     public $cleaned_data = [];
@@ -69,7 +73,7 @@ class BaseForm extends BaseObject implements \IteratorAggregate
     /**
      * Takes three arguments.
      *
-     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -108,6 +112,7 @@ class BaseForm extends BaseObject implements \IteratorAggregate
 
         $this->init();
     }
+
     /**
      * Initializes the object.
      * This method is invoked at the end of the constructor after the object is initialized ;.
@@ -138,136 +143,11 @@ class BaseForm extends BaseObject implements \IteratorAggregate
             // load the upload library
             Orm::ci_instance()->load->library('upload');
         endif;
-    }
-
-    /**
-     * Signals other parts of the form that its is ready for use.
-     *
-     * @since 1.1.0
-     *
-     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
-     */
-    public function done()
-    {
-        $this->setup();
         $this->ready = true;
-
-        return $this;
     }
 
     /**
-     * Creates an opening form tag with a base URL built from your config preferences.
-     *
-     * It will optionally let you add form attributes and hidden input fields, and will always add the accept-charset
-     * attribute based on the charset value in your config file.
-     *
-     *<pre><code>assuming we are using the controller `user/signup` to server this form.
-     * echo $form->open(); // goes back to the controller method that served this form.
-     * <form method="post" accept-charset="utf-8" action="http://example.com/index.php/user/signup">
-     *
-     * echo form->open('email/send'); // goes to the base_url  plus the “email/send” URI segments
-     * <form method="post" accept-charset="utf-8" action="http://example.com/index.php/email/send">
-     * </code></pre>
-     *
-     * This method also detects if the form contains any upload fields a generate a multipart form if they are found.
-     * it is also responsible for displaying the form helpText.
-     *
-     * <h4>Adding Attributes</h4>
-     *
-     * Attributes can be added by passing an associative array to the second parameter, like this:
-     *
-     * <pre><code>$attributes = array('class' => 'email', 'id' => 'myform');
-     * echo form->open('email/send', $attributes);</code></pre>
-     *
-     * Alternatively, you can specify the second parameter as a string:
-     *
-     * <pre><code>echo form->open('email/send', 'class="email" id="myform"');</code></pre>
-     *
-     * The above examples would create a form similar to this:
-     *
-     * <pre><code>&lt; form method="post" accept-charset="utf-8"
-     * action="http://example.com/index.php/email/send" class="email" id="myform" &gt;</code></pre>
-     *
-     * @param string $action
-     * @param array  $attributes
-     * @param array  $hidden
-     *
-     * @return string
-     */
-    public function open($kwargs = [])
-    {
-        assert(is_array($kwargs),
-            'open() expects an associative array, options are { action, attributes, hidden, csrf }');
-
-        $action = '';
-        $attributes = array();
-        $hidden = array();
-
-        extract($kwargs);
-
-        if (strlen($action) <= 0):
-            $action = current_url();
-        endif;
-
-        // create a multipart form or a normal form
-        if ($this->_is_multipart()):
-            $form_open = form_open_multipart($action, $attributes, $hidden);
-        else:
-            $form_open = form_open($action, $attributes, $hidden);
-        endif;
-
-        if (isset($this->form_message)):
-            $form_open .= "<p class='help-block form-help-text'>$this->form_message</p>";
-        endif;
-
-        return $form_open;
-    }
-
-    /**
-     * Create the form closing tags and displays any errors that have not been display explicitly.
-     *
-     * <pre><code>echo form_close($string);</code></pre>
-     *
-     *
-     * Would produce:
-     * <pre><code> &lt;/form &gt; </code></pre>
-     *
-     * @param string $extra
-     *
-     * @return string
-     */
-    public function close($extra = '')
-    {
-        return form_close($extra);
-    }
-
-    /**
-     * Creates a form fieldset.
-     *
-     * @param $legend_text
-     * @param array $attrs
-     *
-     * @return string
-     */
-    public function open_fieldset($legend_text, $attrs = array())
-    {
-        return form_fieldset($legend_text, $attrs);
-    }
-
-    /**
-     * Closes a form fieldset.
-     *
-     * @param string $extra
-     *
-     * @return string
-     */
-    public function close_fieldset($extra = '')
-    {
-        return form_fieldset_close($extra);
-    }
-
-    /**
-     * Returns true if the form is bound and its has not errors after validation has been run.
+     * Returns true if the form is bound and its has no errors after validation has been run.
      *
      * @return bool
      *
@@ -275,9 +155,9 @@ class BaseForm extends BaseObject implements \IteratorAggregate
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function is_valid()
+    public function isValid()
     {
-        $this->_is_ready(__METHOD__);
+        $this->_isReady(__METHOD__);
 
         return $this->is_bound && $this->_form_has_errors();
     }
@@ -311,11 +191,10 @@ class BaseForm extends BaseObject implements \IteratorAggregate
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function _is_ready($method)
+    protected function _isReady($method)
     {
         if (!$this->ready):
-            throw new FormNotReadyException(
-                sprintf('Please ensure you have called done() method of the form before is { %s }', $method));
+            $this->setup();
         endif;
     }
 
@@ -328,7 +207,7 @@ class BaseForm extends BaseObject implements \IteratorAggregate
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function is_ready()
+    public function isReady()
     {
         return $this->ready;
     }
@@ -347,24 +226,11 @@ class BaseForm extends BaseObject implements \IteratorAggregate
         if (!$this->is_bound):
             return;
         endif;
-
-        // this part is for using the CI_VALIDATION
-        $this->ci_validation();
-
         // a better way of doing validation, easy for users to extend
         $this->_clean_fields();
         $this->_clean_form();
     }
 
-    public function ci_validation()
-    {
-        $this->validator()->set_rules($this->validation_rules);
-        $this->validator()->set_data($this->data);
-
-        if ($this->validator()->run() === false):
-            $this->_errors = $this->validator()->error_array();
-        endif;
-    }
 
     /**
      * Gets a single field instance in the form fields array and returns it.
@@ -461,7 +327,7 @@ class BaseForm extends BaseObject implements \IteratorAggregate
     {
         $hidden_fields = [];
         foreach ($this->fields as $name => $field) :
-            if ($field->is_hidden()):
+            if ($field->isHidden()):
                 $hidden_fields[$name] = $field;
             endif;
         endforeach;
@@ -473,7 +339,7 @@ class BaseForm extends BaseObject implements \IteratorAggregate
     {
         $visible_fields = [];
         foreach ($this->fields as $name => $field) :
-            if (!$field->is_hidden()):
+            if (!$field->isHidden()):
                 $visible_fields[$name] = $field;
             endif;
         endforeach;
@@ -490,9 +356,11 @@ class BaseForm extends BaseObject implements \IteratorAggregate
      */
     public function as_p()
     {
-        return $this->_html_output([
-            'row' => '<p>%1$s <br> %2$s <br> %3$s</p>',
-        ]);
+        return $this->_html_output(
+            [
+                'row' => '<p>%1$s <br> %2$s <br> %3$s</p>',
+            ]
+        );
     }
 
     public function validator()
@@ -539,7 +407,7 @@ class BaseForm extends BaseObject implements \IteratorAggregate
 
                 // run custom validation by user
                 $field_clean_method = sprintf('clean_%s', $name);
-                if ($this->has_method($field_clean_method)):
+                if ($this->hasMethod($field_clean_method)):
                     $value = call_user_func([$this, $field_clean_method]);
                     $this->cleaned_data[$name] = $value;
                 endif;
@@ -605,8 +473,8 @@ class BaseForm extends BaseObject implements \IteratorAggregate
         $hidden_output = [];
 
         foreach ($this->fields as $name => $field) :
-            if ($field->is_hidden()):
-                $hidden_output[] = (string) $field;
+            if ($field->isHidden()):
+                $hidden_output[] = (string)$field;
             else:
                 $output[] = sprintf($row, $field->labelTag(), $field, $field->helpText);
             endif;

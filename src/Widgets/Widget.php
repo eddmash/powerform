@@ -80,7 +80,7 @@ abstract class Widget extends BaseObject
         return (isset($data[$name])) ? $data[$name] : null;
     }
 
-    public function is_hidden()
+    public function isHidden()
     {
         return (property_exists($this, 'input_type')) ? $this->input_type === 'hidden' : false;
     }

@@ -92,7 +92,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @var array
      */
-    public $custom_validators = [];
+    public $validators = [];
 
     public function __construct($opts = [])
     {
@@ -127,7 +127,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
         $this->validators = array_merge($this->default_validators, $this->validators);
 
-        $this->custom_validators = array_merge($this->custom_validators, $this->my_validators);
+        $this->validators = array_merge($this->validators, $this->my_validators);
     }
 
     public function prepare_value($value)
@@ -207,7 +207,7 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
 
         // if the field is not hidden field set label
-        if ($this->widget->is_hidden()) :
+        if ($this->widget->isHidden()) :
             return '';
         endif;
 
@@ -313,7 +313,7 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
         $value = $this->to_php($value);
         $this->validate($value);
-        $this->run_validators($value);
+        $this->runValidators($value);
 
         return $value;
     }
@@ -339,12 +339,12 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function run_validators($value)
+    public function runValidators($value)
     {
 
         // collect all validation errors for this field
         $errors = [];
-        foreach ($this->custom_validators as $validator) :
+        foreach ($this->validators as $validator) :
             try {
                 call_user_func_array($validator, $value);
             } catch (ValidationError $e) {
@@ -363,7 +363,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         $this->label = $this->get_label_name();
     }
 
-    public function as_widget(Widget $widget = null, $attrs = [], $only_initial = null)
+    public function asWidget(Widget $widget = null, $attrs = [], $only_initial = null)
     {
         if ($widget == null):
             $widget = $this->widget;
@@ -425,13 +425,13 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function is_hidden()
+    public function isHidden()
     {
-        return $this->widget->is_hidden();
+        return $this->widget->isHidden();
     }
 
     public function __toString()
     {
-        return $this->as_widget();
+        return $this->asWidget();
     }
 }
