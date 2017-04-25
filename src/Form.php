@@ -61,19 +61,19 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public $auto_id = 'id_%s';
     public $initial = [];
     public $data = [];
-    public $is_bound = false;
+    public $isBound = false;
 
     /**
      * @var Field[]
      */
-    protected $fields = [];
+    protected $fieldsCache = [];
     public $validation_rules = [];
-    public $cleaned_data = [];
+    public $cleanedData = [];
 
     /**
      * Takes three arguments.
      *
-     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -94,7 +94,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function __construct($data = [], $initial = [], $kwargs = [])
     {
         if (!empty($data)):
-            $this->is_bound = true;
+            $this->isBound = true;
         endif;
 
         $this->data = $data;
@@ -121,28 +121,25 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
     }
 
+    /**
+     * Returns an array of fields to be attached to the form.
+     * @return Field[]
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
     public function fields()
     {
-    }
+        return [];
 
-    public function widgets()
-    {
-    }
-
-    public function custom()
-    {
     }
 
     public function setup()
     {
-        $this->fields();
+        $fields = $this->fields();
+        // this sets the form fields to the form.
+        foreach ($fields as $name => $field) :
+            $this->addField($name, $field);
+        endforeach;
 
-        $this->custom();
-
-        if ($this->_is_multipart()):
-            // load the upload library
-            Orm::ci_instance()->load->library('upload');
-        endif;
         $this->ready = true;
     }
 
@@ -159,7 +156,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->_isReady(__METHOD__);
 
-        return $this->is_bound && $this->_formHasErrors();
+        return $this->isBound && $this->_formHasErrors();
     }
 
     /**
@@ -223,7 +220,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->_errors = [];
 
-        if (!$this->is_bound):
+        if (!$this->isBound):
             return;
         endif;
 
@@ -253,7 +250,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function getField($field_name)
     {
         if ((array_key_exists(strtolower($field_name), $this->fields))):
-            return $this->fields[strtolower($field_name)];
+            return $this->fieldsCache[strtolower($field_name)];
         endif;
 
         throw new KeyError(sprintf('Field %1$s not found in %2$s', $field_name, static::class));
@@ -270,24 +267,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function loadField($field)
     {
-        $this->fields[strtolower($field->name)] = $field;
-    }
-
-    /**
-     * Sets up so validation rules to be used by the CI_VALIDATION.
-     *
-     * @since 1.1.0
-     *
-     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
-     */
-    public function field_validation_rules($rules)
-    {
-        $this->validation_rules[] = $rules;
+        $this->fieldsCache[strtolower($field->name)] = $field;
     }
 
     public function clean()
     {
-        return $this->cleaned_data;
+        return $this->cleanedData;
     }
 
     public function add_error($name, $error)
@@ -308,7 +293,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->_errors[$name] = $error->get_message();
     }
 
-    public function add_field($name, $field)
+    public function addField($name, $field)
     {
         $this->_fieldSetup($name, $field);
     }
@@ -325,7 +310,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function hidden_fields()
     {
         $hidden_fields = [];
-        foreach ($this->fields as $name => $field) :
+        foreach ($this->fieldsCache as $name => $field) :
             if ($field->isHidden()):
                 $hidden_fields[$name] = $field;
             endif;
@@ -337,7 +322,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function visible_fields()
     {
         $visible_fields = [];
-        foreach ($this->fields as $name => $field) :
+        foreach ($this->fieldsCache as $name => $field) :
             if (!$field->isHidden()):
                 $visible_fields[$name] = $field;
             endif;
@@ -355,28 +340,18 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function as_p()
     {
-        return $this->_htmlOutput(
+        return $this->getHtmlOutput(
             [
-                'row' => '<p>%1$s <br> %2$s <br> %3$s</p>',
+                'row' => '<p>%s <br> %s <br> %s</p>',
             ]
         );
     }
 
-    public function validator()
-    {
-        if (empty($this->validator)):
-            Orm::ci_instance()->load->library('form_validation');
-            $this->validator = Orm::ci_instance()->form_validation;
-        endif;
-
-        return $this->validator;
-    }
-
     public function _cleanFields()
     {
-        $this->cleaned_data = array_diff_key($this->data, $this->_errors);
+        $this->cleanedData = array_diff_key($this->data, $this->_errors);
 
-        foreach ($this->fields as $name => $field) :
+        foreach ($this->fieldsCache as $name => $field) :
 
             // if field has failed validation, no need to go on
             if (array_key_exists($name, $this->_errors)):
@@ -386,9 +361,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             if ($field->disabled):
                 $value = array_key_exists($name, $this->initial) ? $this->initial[$name] : $field->initial;
             else:
-                if (array_key_exists($name, $this->cleaned_data)):
+                if (array_key_exists($name, $this->cleanedData)):
 
-                    $value = $field->widget->valueFromDataCollection($this->cleaned_data, $name);
+                    $value = $field->widget->valueFromDataCollection($this->cleanedData, $name);
                 else:
                     $value = $field->data();
                 endif;
@@ -400,20 +375,20 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
                 // just in case,  confirm the field has not field validation already
                 if (!array_key_exists($name, $this->_errors)):
-                    $this->cleaned_data[$name] = $value;
+                    $this->cleanedData[$name] = $value;
                 endif;
 
                 // run custom validation by user
                 $field_clean_method = sprintf('clean_%s', $name);
                 if ($this->hasMethod($field_clean_method)):
                     $value = call_user_func([$this, $field_clean_method]);
-                    $this->cleaned_data[$name] = $value;
+                    $this->cleanedData[$name] = $value;
                 endif;
             } catch (ValidationError $e) {
                 $this->add_error($name, $e);
 
-                if (array_key_exists($name, $this->cleaned_data)):
-                    unset($this->cleaned_data[$name]);
+                if (array_key_exists($name, $this->cleanedData)):
+                    unset($this->cleanedData[$name]);
                 endif;
             }
 
@@ -423,14 +398,14 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function _cleanForm()
     {
         try {
-            $clean_data = $this->clean();
+            $cleanData = $this->clean();
         } catch (ValidationError $e) {
-            $clean_data = null;
+            $cleanData = null;
             $this->add_error(null, $e);
         }
 
-        if ($clean_data):
-            $this->cleaned_data = $clean_data;
+        if ($cleanData):
+            $this->cleanedData = $cleanData;
         endif;
     }
 
@@ -441,11 +416,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     protected function _is_multipart()
     {
-        if (empty($this->fields)):
+        if (empty($this->fieldsCache)):
             return false;
         endif;
 
-        foreach ($this->fields as $field) :
+        foreach ($this->fieldsCache as $field) :
             if ($field->widget->needs_multipart_form):
                 return true;
             endif;
@@ -459,7 +434,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    protected function _htmlOutput($opts = [])
+    protected function getHtmlOutput($opts = [])
     {
         //todo display errros
         /* @var $field Field */
@@ -470,7 +445,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $output = [];
         $hidden_output = [];
 
-        foreach ($this->fields as $name => $field) :
+        foreach ($this->fieldsCache as $name => $field) :
             if ($field->isHidden()):
                 $hidden_output[] = $field->asWidget();
             else:
@@ -499,7 +474,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->setup();
 
-        return new \ArrayIterator($this->fields);
+        return new \ArrayIterator($this->fieldsCache);
     }
 
     /**
@@ -518,7 +493,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function __get($field_name)
     {
         $this->setup();
-        if (array_key_exists($field_name, $this->fields)):
+        if (array_key_exists($field_name, $this->fieldsCache)):
             return $this->getField($field_name);
         endif;
     }
@@ -531,7 +506,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 //    public function __toString()
 //    {
 //        $this->setup();
-
+//
 //        return $this->as_p();
 //    }
 }

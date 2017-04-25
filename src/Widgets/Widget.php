@@ -22,20 +22,11 @@ abstract class Widget extends BaseObject
 {
     public $attrs;
     public $needs_multipart_form = false;
-    public $is_required = false;
+    public $isRequired = false;
 
     public function __construct($attrs = [], $kwargs = [])
     {
         $this->attrs = $attrs;
-        $this->init();
-    }
-
-    /**
-     * Initializes the object.
-     * This method is invoked at the end of the constructor after the object is initialized ;.
-     */
-    public function init()
-    {
     }
 
     public static function instance($attrs = [], $kwargs = [])
@@ -43,15 +34,16 @@ abstract class Widget extends BaseObject
         return new static($attrs, $kwargs);
     }
 
-    public function build_attrs($attrs = [], $kwargs = [])
+    public function buildAttrs($attrs = [], $kwargs = [])
     {
-        $final_attrs = array_merge($this->attrs, $kwargs);
+
+        $finalAttrs = array_merge($this->attrs, $kwargs);
 
         if (!empty($attrs)):
-            $final_attrs = array_merge($final_attrs, $attrs);
+            $finalAttrs = array_merge($finalAttrs, $attrs);
         endif;
 
-        return $final_attrs;
+        return $finalAttrs;
     }
 
     public function render($name, $value, $attrs = [], $kwargs = [])
@@ -82,21 +74,21 @@ abstract class Widget extends BaseObject
 
     public function isHidden()
     {
-        return (property_exists($this, 'input_type')) ? $this->input_type === 'hidden' : false;
+        return (property_exists($this, 'inputType')) ? $this->inputType === 'hidden' : false;
     }
 
-    public function flat_attrs($attrs)
+    public function flatAttrs($attrs)
     {
-        $str_attrs = '';
+        $strAttrs = '';
         foreach ($attrs as $key => $attr) :
             if ($attrs === true || $attrs === false):
-                $str_attrs .= ' '.$key;
+                $strAttrs .= ' '.$key;
             else:
-                $str_attrs .= sprintf(' %s = %s', $key, $attr);
+                $strAttrs .= sprintf(' %s = %s', $key, $attr);
             endif;
         endforeach;
 
-        return $str_attrs;
+        return $strAttrs;
     }
 
     /**Returns the HTML ID attribute of this Widget for use by a <label>,
@@ -108,7 +100,7 @@ abstract class Widget extends BaseObject
      * @since 1.1.0
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function get_id_for_label($id)
+    public function getIdForLabel($id)
     {
         return $id;
     }

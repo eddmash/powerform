@@ -12,5 +12,5 @@ namespace Eddmash\PowerOrm\Form\Widgets;
 
 class DateInput extends TextInput
 {
-    public $input_type = 'date';
+    public $inputType = 'date';
 }

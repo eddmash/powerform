@@ -18,17 +18,16 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 abstract class Input extends Widget
 {
-    public $input_type = null;
+    public $inputType = null;
 
     public function render($name, $value, $attrs = [], $kwargs = [])
     {
-        $final_attrs = $this->build_attrs($attrs, ['type' => $this->input_type, 'name' => $name]);
-
+        $finalAttrs = $this->buildAttrs($attrs, ['type' => $this->inputType, 'name' => $name]);
         // if we have value , add it
         if (!empty($value)):
-            $final_attrs['value'] = $this->prepareValue($value);
+            $finalAttrs['value'] = $this->prepareValue($value);
         endif;
 
-        return sprintf('<input %s>', $this->flat_attrs($final_attrs));
+        return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
     }
 }

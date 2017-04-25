@@ -2,22 +2,18 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
-/**
- * Created by http://eddmash.com
- * User: eddmash
- * Date: 7/16/16
- * Time: 2:05 PM.
- */
+use Eddmash\PowerOrm\Form\Widgets\Widget;
+
 
 /**
  * Creates a :
  *      Default widget: TextInput
  *      Empty value: '' (an empty string)
- *      Validates max_length or min_length, if they are provided. Otherwise, all inputs are valid.
+ *      Validates maxLength or minLength, if they are provided. Otherwise, all inputs are valid.
  *
  * Has two optional arguments for validation:
- *  - max_length
- *  - min_length
+ *  - maxLength
+ *  - minLength
  *
  *  If provided, these arguments ensure that the string is at most or at least the given length.
  *
@@ -29,27 +25,30 @@ namespace Eddmash\PowerOrm\Form\Fields;
  */
 class CharField extends Field
 {
-    public $max_length;
-    public $min_length;
+    public $maxLength;
+    public $minLength;
 
     public function __construct($opts = [])
     {
         parent::__construct($opts);
 
-        if ($this->max_length):
-            $this->validators[] = sprintf('max_length[%s]', $this->max_length);
+        if ($this->maxLength):
+            $this->validators[] = sprintf('maxLength[%s]', $this->maxLength);
         endif;
 
-        if ($this->min_length):
-            $this->validators[] = sprintf('min_length[%s]', $this->min_length);
+        if ($this->minLength):
+            $this->validators[] = sprintf('minLength[%s]', $this->minLength);
         endif;
     }
 
-    public function widget_attrs($widget)
+    /**
+     * {@inheritdoc}
+     */
+    public function widgetAttrs(Widget $widget)
     {
-        $attrs = parent::widget_attrs($widget);
-        if ($this->max_length):
-            $attrs['maxlength'] = $this->max_length;
+        $attrs = parent::widgetAttrs($widget);
+        if ($this->maxLength):
+            $attrs['maxlength'] = $this->maxLength;
         endif;
 
         return $attrs;

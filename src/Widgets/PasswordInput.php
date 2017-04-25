@@ -19,5 +19,5 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class PasswordInput extends TextInput
 {
-    public $input_type = 'password';
+    public $inputType = 'password';
 }

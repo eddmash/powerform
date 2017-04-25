@@ -19,7 +19,7 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class MultipleCheckboxes extends ChoiceInputFields
 {
-    public $input_type = 'checkbox';
+    public $inputType = 'checkbox';
 
     public function _prepare_checked($selected_choices)
     {

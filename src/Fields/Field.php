@@ -8,6 +8,7 @@
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\ContributorInterface;
+use Eddmash\PowerOrm\Exception\NotImplemented;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Form\Form;
@@ -39,7 +40,7 @@ use Eddmash\PowerOrm\Form\Widgets\Widget;
  * localize -- Boolean that specifies if the field should be localized.
  * disabled -- Boolean that specifies whether the field is disabled, that
  *             is its widget is shown in the form but not editable.
- * label_suffix -- Suffix to be added to the label. Overrides
+ * labelSuffix -- Suffix to be added to the label. Overrides
  *
  * @since 1.1.0
  *
@@ -86,9 +87,13 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public $disabled = false;
 
-    public $label_suffix = null;
+    public $labelSuffix = null;
 
-    public $default_validators = [];
+    /**
+     * Default validators to be run on the field.
+     * @var array
+     */
+    public $defaultValidators = [];
 
     /**
      * A list of some custom validators to run, this provides an easier way of implementing custom validations
@@ -101,22 +106,20 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function __construct($opts = [])
     {
         $this->validators = [];
-        $this->my_validators = [];
+
+        $this->widget = $this->getWidget();
 
         // replace the default options with the ones passed in.
         foreach ($opts as $key => $value) :
             $this->{$key} = $value;
         endforeach;
 
-        $this->prepareWidget();
         $this->initial = ($this->initial == null) ? [] : $this->initial;
 
-//        dump($this->widget());
-//        dump($this->widget);
-        $this->widget->is_required = $this->required;
+        $this->widget->isRequired = $this->required;
 
-        // Hook into this->widget_attrs() for any Field-specific HTML attributes.
-        $extra_attrs = $this->widget_attrs($this->widget);
+        // Hook into this->widgetAttrs() for any Field-specific HTML attributes.
+        $extra_attrs = $this->widgetAttrs($this->widget);
 
         if ($extra_attrs):
             $this->widget->attrs = array_merge($this->widget->attrs, $extra_attrs);
@@ -130,9 +133,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $this->validators[] = 'required';
         endif;
 
-        $this->validators = array_merge($this->default_validators, $this->validators);
-
-        $this->validators = array_merge($this->validators, $this->my_validators);
+        $this->validators = array_merge($this->defaultValidators, $this->validators);
     }
 
     public function prepareValue($value)
@@ -143,9 +144,9 @@ abstract class Field extends BaseObject implements ContributorInterface
     /**
      * Given a Widget instance, returns an associative array of any HTML attributes
      * that should be added to the Widget, based on this Field. this is a good place to ensure that the attributes field
-     * matches to there related html attributes e.g for form field we get mx_length but html expexts maxlength.
+     * matches to there related html attributes e.g for form field we get mx_length but html expects maxlength.
      *
-     * @param $widget
+     * @param Widget $widget
      *
      * @return array
      *
@@ -153,26 +154,24 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function widget_attrs($widget)
+    public function widgetAttrs(Widget $widget)
     {
         return [];
     }
 
     /**
      * Returns the Widget to use for this form field.
-     *
      * @return Widget
-     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
     public function getWidget()
     {
-        return $this->widget;
+        return TextInput::instance();
     }
 
-    public function to_php($value)
+    public function toPhp($value)
     {
         return $value;
     }
@@ -216,7 +215,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             return '';
         endif;
 
-        return $this->_formLabel($this->get_label_name(), $this->get_id_for_label(), []);
+        return $this->_formLabel($this->getLabelName(), $this->getIdForLabel(), []);
     }
 
     public function _formLabel($label_text = '', $id = '', array $attributes = [])
@@ -241,7 +240,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @return mixed|string
      */
-    public function get_label_name()
+    public function getLabelName()
     {
         // incase form label is not set
         if (empty($this->label)):
@@ -251,7 +250,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         return ucfirst($this->label);
     }
 
-    public function get_auto_id()
+    public function getAutoId()
     {
         if (is_string($this->form->auto_id) && strpos($this->form->auto_id, '%s')):
             return sprintf($this->form->auto_id, $this->name);
@@ -273,14 +272,14 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function get_id_for_label()
+    public function getIdForLabel()
     {
-        $id = (array_key_exists('id', $this->widget->attrs)) ? $this->widget->attrs['id'] : $this->get_auto_id();
+        $id = (array_key_exists('id', $this->widget->attrs)) ? $this->widget->attrs['id'] : $this->getAutoId();
 
-        return $this->widget->get_id_for_label($id);
+        return $this->widget->getIdForLabel($id);
     }
 
-    public function bound_value($data, $initial)
+    public function boundValue($data, $initial)
     {
         return $data;
     }
@@ -295,14 +294,8 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function contributeToClass($name, $object)
     {
-        $this->set_from_name($name);
+        $this->setFromName($name);
         $object->loadField($this);
-
-        $object->field_validation_rules([
-            'field' => $this->get_html_name(),
-            'label' => $this->get_label_name(),
-            'rules' => $this->validators(),
-        ]);
         $this->form = $object;
     }
 
@@ -317,14 +310,14 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function get_html_name()
+    public function getHtmlName()
     {
         return $this->name;
     }
 
     public function clean($value)
     {
-        $value = $this->to_php($value);
+        $value = $this->toPhp($value);
         $this->validate($value);
         $this->runValidators($value);
 
@@ -370,10 +363,10 @@ abstract class Field extends BaseObject implements ContributorInterface
         endif;
     }
 
-    public function set_from_name($name)
+    public function setFromName($name)
     {
         $this->name = $name;
-        $this->label = $this->get_label_name();
+        $this->label = $this->getLabelName();
     }
 
     public function asWidget(Widget $widget = null, $attrs = [], $only_initial = null)
@@ -386,14 +379,14 @@ abstract class Field extends BaseObject implements ContributorInterface
             $attrs['disabled'] = true;
         endif;
 
-        if (!empty($this->get_auto_id()) &&
+        if (!empty($this->getAutoId()) &&
             !array_key_exists('id', $attrs) &&
             !array_key_exists('id', $this->widget->attrs)
         ):
-            $attrs['id'] = $this->get_auto_id();
+            $attrs['id'] = $this->getAutoId();
         endif;
 
-        return (string) $widget->render($this->get_html_name(), $this->value(), $attrs);
+        return (string) $widget->render($this->getHtmlName(), $this->value(), $attrs);
     }
 
     /**
@@ -411,7 +404,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
         $value = $this->initial;
 
-        if (!$this->form->is_bound):
+        if (!$this->form->isBound):
 
             if (array_key_exists($name, $this->form->initial)):
                 $value = $this->form->initial[$name];
@@ -419,7 +412,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         else:
             $initial = (array_key_exists($name, $this->form->initial)) ? $this->form->initial[$name] : $this->initial;
 
-            $value = $this->bound_value($this->data(), $initial);
+            $value = $this->boundValue($this->data(), $initial);
         endif;
 
         return $this->prepareValue($value);
@@ -449,16 +442,4 @@ abstract class Field extends BaseObject implements ContributorInterface
         return $this->asWidget();
     }
 
-    private function prepareWidget()
-    {
-        /** @var $widget Widget */
-        $widget = (!empty($this->getWidget())) ? $this->getWidget() : TextInput::instance();
-        if (is_string($widget)):
-
-            $widget = $widget::instance();
-
-        endif;
-        $this->widget = $widget;
-
-    }
 }

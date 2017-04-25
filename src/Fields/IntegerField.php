@@ -9,6 +9,7 @@
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Form\Widgets\NumberInput;
+use Eddmash\PowerOrm\Form\Widgets\Widget;
 
 /**
  * Creates a:
@@ -19,8 +20,8 @@ use Eddmash\PowerOrm\Form\Widgets\NumberInput;
  *
  *
  * Takes two optional arguments for validation:
- *  - max_value
- *  - min_value
+ *  - maxValue
+ *  - minValue
  *
  * These control the range of values permitted in the field.
  *
@@ -32,19 +33,19 @@ use Eddmash\PowerOrm\Form\Widgets\NumberInput;
  */
 class IntegerField extends Field
 {
-    public $min_value;
-    public $max_value;
+    public $minValue;
+    public $maxValue;
 
     public function __construct($opts = [])
     {
         parent::__construct($opts);
 
-        if ($this->max_value):
-            $this->validators[] = sprintf('greater_than[%s]', $this->max_value);
+        if ($this->maxValue):
+            $this->validators[] = sprintf('greater_than[%s]', $this->maxValue);
         endif;
 
-        if ($this->min_value):
-            $this->validators[] = sprintf('less_than[%s]', $this->min_value);
+        if ($this->minValue):
+            $this->validators[] = sprintf('less_than[%s]', $this->minValue);
         endif;
     }
 
@@ -53,16 +54,19 @@ class IntegerField extends Field
         return NumberInput::instance();
     }
 
-    public function widget_attrs($widget)
+    /**
+     * {@inheritdoc}
+     */
+    public function widgetAttrs(Widget $widget)
     {
-        $attrs = parent::widget_attrs($widget);
+        $attrs = parent::widgetAttrs($widget);
 
-        if ($this->max_value):
-            $attrs['max'] = $this->max_value;
+        if ($this->maxValue):
+            $attrs['max'] = $this->maxValue;
         endif;
 
-        if ($this->min_value):
-            $attrs['min'] = $this->min_value;
+        if ($this->minValue):
+            $attrs['min'] = $this->minValue;
         endif;
 
         return $attrs;

@@ -18,10 +18,10 @@ use Eddmash\PowerOrm\Form\Widgets\UrlInput;
  *
  *
  * Takes the following optional arguments:
- *      - max_length
- *      - min_length
+ *      - maxLength
+ *      - minLength
  *
- * These are the same as CharField->max_length and CharField->min_length.
+ * These are the same as CharField->maxLength and CharField->minLength.
  *
  * Class UrlField
  *
@@ -31,7 +31,7 @@ use Eddmash\PowerOrm\Form\Widgets\UrlInput;
  */
 class UrlField extends CharField
 {
-    public $default_validators = ['valid_url'];
+    public $defaultValidators = ['valid_url'];
 
     public function getWidget()
     {

@@ -23,19 +23,19 @@ class CheckboxInput extends Widget
 {
     public function render($name, $value, $attrs = [], $kwargs = [])
     {
-        $final_attrs = $this->build_attrs($attrs, ['type' => 'checkbox', 'name' => $name]);
+        $finalAttrs = $this->buildAttrs($attrs, ['type' => 'checkbox', 'name' => $name]);
 
         // if we have value , add it
         // but since we are dealing with checkbox, this will be checked
         if ($this->is_checked($value)):
-            $final_attrs['checked'] = 'checked';
+            $finalAttrs['checked'] = 'checked';
         endif;
 
         if (!empty($value)):
             return (string) $value;
         endif;
 
-        return sprintf('<input %s>', $this->flat_attrs($final_attrs));
+        return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
     }
 
     public function is_checked($value)

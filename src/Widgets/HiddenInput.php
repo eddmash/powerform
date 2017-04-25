@@ -19,5 +19,5 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class HiddenInput extends TextInput
 {
-    public $input_type = 'hidden';
+    public $inputType = 'hidden';
 }

@@ -17,5 +17,5 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class EmailInput extends TextInput
 {
-    public $input_type = 'email';
+    public $inputType = 'email';
 }

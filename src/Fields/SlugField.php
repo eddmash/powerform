@@ -24,5 +24,5 @@ namespace Eddmash\PowerOrm\Form\Fields;
  */
 class SlugField extends CharField
 {
-    public $default_validators = ['regex_match[/^[-a-zA-Z0-9_]+\Z/]'];
+    public $defaultValidators = ['regex_match[/^[-a-zA-Z0-9_]+\Z/]'];
 }

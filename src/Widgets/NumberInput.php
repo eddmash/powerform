@@ -17,5 +17,5 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class NumberInput extends TextInput
 {
-    public $input_type = 'number';
+    public $inputType = 'number';
 }

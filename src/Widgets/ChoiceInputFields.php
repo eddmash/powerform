@@ -19,7 +19,7 @@ namespace Eddmash\PowerOrm\Form\Widgets;
 abstract class ChoiceInputFields extends Input
 {
     public $choices = [];
-    public $input_type = '';
+    public $inputType = '';
     public $outer_html = '<ul %1$s> %2$s </ul>';
     public $inner_html = '<li>%1$s %2$s </li>';
 
@@ -71,9 +71,9 @@ abstract class ChoiceInputFields extends Input
         $count = 1;
         foreach ($choices as $label => $value) :
 
-            $attrs_ = $this->build_attrs($attrs, [
+            $attrs_ = $this->buildAttrs($attrs, [
                 'name' => $field_name,
-                'type' => $this->input_type,
+                'type' => $this->inputType,
             ]);
 
             $attrs_['id'] = $attrs_['id'].'_'.$count;
@@ -93,7 +93,7 @@ abstract class ChoiceInputFields extends Input
             ++$count;
         endforeach;
 
-        return sprintf($this->outer_html, $this->flat_attrs($attrs), implode(' ', $output));
+        return sprintf($this->outer_html, $this->flatAttrs($attrs), implode(' ', $output));
     }
 
     public function render_option($checked_choices, $label, $value, $attrs = [])
@@ -109,7 +109,7 @@ abstract class ChoiceInputFields extends Input
 
         $template = '<label for=""> <input %1$s %2$s/> %3$s </label>';
 
-        return sprintf($template, $this->flat_attrs($attrs), $checked_html, $label);
+        return sprintf($template, $this->flatAttrs($attrs), $checked_html, $label);
     }
 
     public function _prepare_checked($checked_choices)

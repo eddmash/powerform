@@ -47,14 +47,14 @@ class ChoiceField extends Field
         $this->widget->choices = $this->choices;
     }
 
-    public function get_html_name()
+    public function getHtmlName()
     {
         if ($this->widget instanceof SelectMultiple || $this->widget instanceof MultipleCheckboxes):
             return sprintf('%s[]', $this->name);
 
         endif;
 
-        return parent::get_html_name();
+        return parent::getHtmlName();
     }
 
     public function getWidget()

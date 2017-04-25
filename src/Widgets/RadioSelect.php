@@ -19,7 +19,7 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class RadioSelect extends ChoiceInputFields
 {
-    public $input_type = 'radio';
+    public $inputType = 'radio';
 
     public function _prepare_checked($selected)
     {

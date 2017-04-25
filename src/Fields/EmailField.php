@@ -16,7 +16,7 @@ use Eddmash\PowerOrm\Form\Widgets\EmailInput;
  *      Empty value: '' (an empty string)
  *      Validates that the given value is a valid email address.
  *
- * Has two optional arguments for validation, max_length and min_length.
+ * Has two optional arguments for validation, maxLength and minLength.
  * If provided, these arguments ensure that the string is at most or at least the given length.
  *
  * Class EmailField
@@ -27,7 +27,7 @@ use Eddmash\PowerOrm\Form\Widgets\EmailInput;
  */
 class EmailField extends CharField
 {
-    public $default_validators = ['valid_email'];
+    public $defaultValidators = ['valid_email'];
 
     public function getWidget()
     {

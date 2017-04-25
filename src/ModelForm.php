@@ -9,33 +9,34 @@
 namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Model\Model;
 
 /**
  * @param Model $model
- * @param $required_fields
+ * @param $requiredFields
  * @param $excludes
  * @param $widgets
  * @param $labels
  * @param $helpTexts
- * @param $field_classes
+ * @param $fieldClasses
  *
- * @return array
+ * @return Field[]
  *
  * @since 1.1.0
  *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
-function fieldsFromModel(Model $model, $required_fields, $excludes, $widgets, $labels, $helpTexts, $field_classes)
+function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $labels, $helpTexts, $fieldClasses)
 {
-    $model_fields = $model->meta->getConcreteFields();
+    $modelFields = $model->meta->getConcreteFields();
     $fields = [];
-    foreach ($model_fields as $name => $obj) :
+    foreach ($modelFields as $name => $field) :
         if (in_array($name, $excludes)):
             continue;
         endif;
 
-        if (!empty($required_fields) && !in_array($name, $required_fields)):
+        if (!empty($requiredFields) && !in_array($name, $requiredFields)):
             continue;
         endif;
         $kwargs = [];
@@ -52,11 +53,11 @@ function fieldsFromModel(Model $model, $required_fields, $excludes, $widgets, $l
             $kwargs['helpText'] = $helpTexts[$name];
         endif;
 
-        if (!empty($field_classes) && array_key_exists($name, $field_classes)):
-            $kwargs['form_class'] = $field_classes[$name];
+        if (!empty($fieldClasses) && array_key_exists($name, $fieldClasses)):
+            $kwargs['fieldClass'] = $fieldClasses[$name];
         endif;
 
-        $fields[$name] = $obj->formfield();
+        $fields[$name] = $field->formfield($kwargs);
     endforeach;
 
     return $fields;
@@ -67,10 +68,10 @@ abstract class ModelForm extends Form
     protected $modelClass;
     protected $fields = [];
     protected $excludes = [];
-    protected $labels = [];
-    protected $widgets = [];
-    protected $helpTexts = [];
-    protected $field_classes = [];
+    private $labels = [];
+    private $widgets = [];
+    private $helpTexts = [];
+    private $fieldClasses = [];
 
     public function setup()
     {
@@ -78,69 +79,60 @@ abstract class ModelForm extends Form
             $this->getModel(),
             $this->fields,
             $this->excludes,
-            $this->widgets,
-            $this->labels,
-            $this->helpTexts,
-            $this->field_classes
+            $this->widgets(),
+            $this->labels(),
+            $this->helpTexts(),
+            $this->fieldClasses()
         );
 
-        foreach ($fields as $name => $obj) :
+        foreach ($fields as $name => $field) :
             // if field is already in the fields, that takes precedence over model field name
             if (array_key_exists($name, $this->fields)):
                 continue;
             endif;
 
-            $this->{$name} = $obj;
+            $this->{$name} = $field;
         endforeach;
 
         parent::setup();
     }
 
-//    public function custom()
-//    {
-//    }
-
-//    public function only($fields = [])
-//    {
-//        $this->fields = array_merge($this->fields, $fields);
-
-//        return $this;
-//    }
-
-//    public function exclude($excludes = [])
-//    {
-//        $this->excludes = array_merge($this->excludes, $excludes);
-
-//        return $this;
-//    }
-
-//    public function labels($labels = [])
-//    {
-//        $this->labels = array_merge($this->labels, $labels);
-
-//        return $this;
-//    }
-
-//    public function widgets($widgets = [])
-//    {
-//        $this->widgets = array_merge($this->widgets, $widgets);
-
-//        return $this;
-//    }
-
-//    public function helpTexts($helpTexts = [])
-//    {
-//        $this->helpTexts = array_merge($this->helpTexts, $helpTexts);
-
-//        return $this;
-//    }
-
-//    public function field_classes($field_classes = [])
-//    {
-//        $this->field_classes = array_merge($this->field_classes, $field_classes);
-
-//        return $this;
-//    }
+    /**
+     * Widgets to use on the fields.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function widgets()
+    {
+        return $this->widgets;
+    }
+    /**
+     * Field classes to use on the fields.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function fieldClasses()
+    {
+        return $this->fieldClasses;
+    }
+    /**
+     * Help texts classes to use on the fields.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function helpTexts()
+    {
+        return $this->helpTexts;
+    }
+    /**
+     * Label to use on the fields.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function labels()
+    {
+        return $this->labels;
+    }
 
     /**
      * Returns an instance of the model.

@@ -17,5 +17,5 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class UrlInput extends TextInput
 {
-    public $input_type = 'url';
+    public $inputType = 'url';
 }

@@ -47,10 +47,10 @@ class Select extends Widget
             $value = [];
         endif;
 
-        $final_attrs = $this->build_attrs($attrs, ['name' => $name]);
+        $finalAttrs = $this->buildAttrs($attrs, ['name' => $name]);
         $output = [];
         // open select
-        $output[] = sprintf($this->open_select, $this->flat_attrs($final_attrs));
+        $output[] = sprintf($this->open_select, $this->flatAttrs($finalAttrs));
         // add select options
         $options[] = $this->render_options($value);
 
