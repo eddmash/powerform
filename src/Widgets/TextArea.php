@@ -30,8 +30,13 @@ class TextArea extends Widget
 
     public function render($name, $value, $attrs = [], $kwargs = [])
     {
-        $final_attrs = $this->build_attrs($attrs, ['type' => $this->input_type, 'name' => $name]);
+        $final_attrs = $this->build_attrs($attrs, ['name' => $name]);
 
-        return sprintf('<textarea %1$s>%2$s</textarea>', $final_attrs, $this->prepare_value($value));
+        $finalVal = '';
+        if (!empty($value)):
+            $finalVal = $this->prepareValue($value);
+        endif;
+
+        return sprintf('<textarea %s>%s</textarea>', $this->flat_attrs($final_attrs), $finalVal);
     }
 }

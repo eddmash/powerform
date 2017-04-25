@@ -24,7 +24,7 @@ use Eddmash\PowerOrm\Form\Widgets\CheckboxInput;
  */
 class BooleanField extends Field
 {
-    public function get_widget()
+    public function getWidget()
     {
         return CheckboxInput::instance();
     }

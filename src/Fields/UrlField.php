@@ -33,7 +33,7 @@ class UrlField extends CharField
 {
     public $default_validators = ['valid_url'];
 
-    public function get_widget()
+    public function getWidget()
     {
         return UrlInput::instance();
     }

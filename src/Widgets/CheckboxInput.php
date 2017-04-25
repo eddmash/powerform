@@ -43,7 +43,7 @@ class CheckboxInput extends Widget
         return !empty($value);
     }
 
-    public function value_from_data_collection($data, $name)
+    public function valueFromDataCollection($data, $name)
     {
         // checkboxes are either checked or not checked they dont take values like other input fields
         if (!array_key_exists($name, $data)):

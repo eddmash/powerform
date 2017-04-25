@@ -29,7 +29,7 @@ class EmailField extends CharField
 {
     public $default_validators = ['valid_email'];
 
-    public function get_widget()
+    public function getWidget()
     {
         return EmailInput::instance();
     }

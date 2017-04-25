@@ -10,6 +10,7 @@ namespace Eddmash\PowerOrm\Form\Fields;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
+use Eddmash\PowerOrm\Form\Form;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
@@ -46,6 +47,9 @@ use Eddmash\PowerOrm\Form\Widgets\Widget;
  */
 abstract class Field extends BaseObject implements ContributorInterface
 {
+    /**
+     * @var Form
+     */
     public $form;
     public $name;
     /** @var Widget */
@@ -96,8 +100,6 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     public function __construct($opts = [])
     {
-        $this->widget = (empty($this->widget)) ? $this->get_widget() : $this->widget;
-
         $this->validators = [];
         $this->my_validators = [];
 
@@ -106,8 +108,11 @@ abstract class Field extends BaseObject implements ContributorInterface
             $this->{$key} = $value;
         endforeach;
 
+        $this->prepareWidget();
         $this->initial = ($this->initial == null) ? [] : $this->initial;
 
+//        dump($this->widget());
+//        dump($this->widget);
         $this->widget->is_required = $this->required;
 
         // Hook into this->widget_attrs() for any Field-specific HTML attributes.
@@ -130,7 +135,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         $this->validators = array_merge($this->validators, $this->my_validators);
     }
 
-    public function prepare_value($value)
+    public function prepareValue($value)
     {
         return $value;
     }
@@ -156,15 +161,15 @@ abstract class Field extends BaseObject implements ContributorInterface
     /**
      * Returns the Widget to use for this form field.
      *
-     * @return static
+     * @return Widget
      *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function get_widget()
+    public function getWidget()
     {
-        return TextInput::instance();
+        return $this->widget;
     }
 
     public function to_php($value)
@@ -280,10 +285,18 @@ abstract class Field extends BaseObject implements ContributorInterface
         return $data;
     }
 
+    /**
+     * @param string $name
+     * @param Form   $object
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function contributeToClass($name, $object)
     {
         $this->set_from_name($name);
-        $object->load_field($this);
+        $object->loadField($this);
 
         $object->field_validation_rules([
             'field' => $this->get_html_name(),
@@ -399,6 +412,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         $value = $this->initial;
 
         if (!$this->form->is_bound):
+
             if (array_key_exists($name, $this->form->initial)):
                 $value = $this->form->initial[$name];
             endif;
@@ -408,12 +422,12 @@ abstract class Field extends BaseObject implements ContributorInterface
             $value = $this->bound_value($this->data(), $initial);
         endif;
 
-        return $this->prepare_value($value);
+        return $this->prepareValue($value);
     }
 
     public function data()
     {
-        return $this->widget->value_from_data_collection($this->form->data, $this->name);
+        return $this->widget->valueFromDataCollection($this->form->data, $this->name);
     }
 
     /**
@@ -433,5 +447,18 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function __toString()
     {
         return $this->asWidget();
+    }
+
+    private function prepareWidget()
+    {
+        /** @var $widget Widget */
+        $widget = (!empty($this->getWidget())) ? $this->getWidget() : TextInput::instance();
+        if (is_string($widget)):
+
+            $widget = $widget::instance();
+
+        endif;
+        $this->widget = $widget;
+
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the ci4 package.
  *
@@ -10,12 +11,16 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
-use Eddmash\PowerOrm\Form\Widgets\DateInput;
+use Eddmash\PowerOrm\Form\Widgets\TextArea;
 
-class DateField extends Field
+class TextField extends Field
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getWidget()
     {
-        return DateInput::instance();
+        return TextArea::instance();
     }
+
 }

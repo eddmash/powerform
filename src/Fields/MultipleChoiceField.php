@@ -12,7 +12,7 @@ use Eddmash\PowerOrm\Form\Widgets\SelectMultiple;
 
 class MultipleChoiceField extends ChoiceField
 {
-    public function get_widget()
+    public function getWidget()
     {
         return SelectMultiple::instance();
     }

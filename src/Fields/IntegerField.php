@@ -48,7 +48,7 @@ class IntegerField extends Field
         endif;
     }
 
-    public function get_widget()
+    public function getWidget()
     {
         return NumberInput::instance();
     }

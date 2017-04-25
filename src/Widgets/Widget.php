@@ -70,12 +70,12 @@ abstract class Widget extends BaseObject
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function prepare_value($value)
+    public function prepareValue($value)
     {
         return $value;
     }
 
-    public function value_from_data_collection($data, $name)
+    public function valueFromDataCollection($data, $name)
     {
         return (isset($data[$name])) ? $data[$name] : null;
     }
@@ -92,7 +92,7 @@ abstract class Widget extends BaseObject
             if ($attrs === true || $attrs === false):
                 $str_attrs .= ' '.$key;
             else:
-                $str_attrs .= sprintf(' %1$s = %2$s', $key, $attr);
+                $str_attrs .= sprintf(' %s = %s', $key, $attr);
             endif;
         endforeach;
 

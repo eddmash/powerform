@@ -57,7 +57,7 @@ class ChoiceField extends Field
         return parent::get_html_name();
     }
 
-    public function get_widget()
+    public function getWidget()
     {
         return Select::instance();
     }

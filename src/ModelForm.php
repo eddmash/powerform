@@ -10,7 +10,6 @@ namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\BaseOrm;
 use Eddmash\PowerOrm\Model\Model;
-use Orm;
 
 /**
  * @param Model $model
@@ -85,64 +84,63 @@ abstract class ModelForm extends Form
             $this->field_classes
         );
 
-        foreach ($fields as $name => $value) :
+        foreach ($fields as $name => $obj) :
             // if field is already in the fields, that takes precedence over model field name
             if (array_key_exists($name, $this->fields)):
                 continue;
             endif;
 
-            $this->{$name} = $value;
+            $this->{$name} = $obj;
         endforeach;
 
         parent::setup();
     }
 
-
 //    public function custom()
 //    {
 //    }
-//
+
 //    public function only($fields = [])
 //    {
 //        $this->fields = array_merge($this->fields, $fields);
-//
+
 //        return $this;
 //    }
-//
+
 //    public function exclude($excludes = [])
 //    {
 //        $this->excludes = array_merge($this->excludes, $excludes);
-//
+
 //        return $this;
 //    }
 
 //    public function labels($labels = [])
 //    {
 //        $this->labels = array_merge($this->labels, $labels);
-//
+
 //        return $this;
 //    }
 
-    public function widgets($widgets = [])
-    {
-        $this->widgets = array_merge($this->widgets, $widgets);
+//    public function widgets($widgets = [])
+//    {
+//        $this->widgets = array_merge($this->widgets, $widgets);
 
-        return $this;
-    }
+//        return $this;
+//    }
 
-    public function helpTexts($helpTexts = [])
-    {
-        $this->helpTexts = array_merge($this->helpTexts, $helpTexts);
+//    public function helpTexts($helpTexts = [])
+//    {
+//        $this->helpTexts = array_merge($this->helpTexts, $helpTexts);
 
-        return $this;
-    }
+//        return $this;
+//    }
 
-    public function field_classes($field_classes = [])
-    {
-        $this->field_classes = array_merge($this->field_classes, $field_classes);
+//    public function field_classes($field_classes = [])
+//    {
+//        $this->field_classes = array_merge($this->field_classes, $field_classes);
 
-        return $this;
-    }
+//        return $this;
+//    }
 
     /**
      * Returns an instance of the model.
@@ -152,11 +150,12 @@ abstract class ModelForm extends Form
      */
     public function getModel()
     {
-        return BaseOrm::getRegistry()->getModel($this->getModelClass());;
+        return BaseOrm::getRegistry()->getModel($this->getModelClass());
     }
 
     /**
      * Returns the Model class to use in this form.
+     *
      * @return mixed
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */

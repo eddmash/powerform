@@ -26,7 +26,7 @@ abstract class Input extends Widget
 
         // if we have value , add it
         if (!empty($value)):
-            $final_attrs['value'] = $this->prepare_value($value);
+            $final_attrs['value'] = $this->prepareValue($value);
         endif;
 
         return sprintf('<input %s>', $this->flat_attrs($final_attrs));
