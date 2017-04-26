@@ -8,6 +8,7 @@ use Eddmash\PowerOrm\Exception\FormNotReadyException;
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
+use Valitron\Validator;
 
 /**
  * Class Form.
@@ -275,7 +276,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return $this->cleanedData;
     }
 
-    public function add_error($name, $error)
+    public function _addError($name, $error)
     {
 
         // for consistency convert them to a validation error object
@@ -290,7 +291,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
         // todo deal with a list of validation errors
 
-        $this->_errors[$name] = $error->get_message();
+        $this->_errors[$name] = $error->getMessage();
     }
 
     public function addField($name, $field)
@@ -385,7 +386,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $this->cleanedData[$name] = $value;
                 endif;
             } catch (ValidationError $e) {
-                $this->add_error($name, $e);
+                $this->_addError($name, $e);
 
                 if (array_key_exists($name, $this->cleanedData)):
                     unset($this->cleanedData[$name]);
@@ -401,7 +402,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             $cleanData = $this->clean();
         } catch (ValidationError $e) {
             $cleanData = null;
-            $this->add_error(null, $e);
+            $this->_addError(null, $e);
         }
 
         if ($cleanData):
@@ -503,10 +504,10 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->_fieldSetup($name, $value);
     }
 
-//    public function __toString()
-//    {
-//        $this->setup();
-//
-//        return $this->as_p();
-//    }
+    public function __toString()
+    {
+        $this->setup();
+
+        return $this->as_p();
+    }
 }

@@ -9,6 +9,7 @@
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Form\Widgets\EmailInput;
+use Respect\Validation\Validator;
 
 /**
  * Creates an :
@@ -27,10 +28,21 @@ use Eddmash\PowerOrm\Form\Widgets\EmailInput;
  */
 class EmailField extends CharField
 {
-    public $defaultValidators = ['valid_email'];
-
     public function getWidget()
     {
         return EmailInput::instance();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDefaultValidators()
+    {
+
+        $validators = parent::getDefaultValidators();
+        $validators[] = Validator::email();
+        return $validators;
+    }
+
+
 }

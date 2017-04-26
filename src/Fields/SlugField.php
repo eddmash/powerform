@@ -8,6 +8,8 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
+use Respect\Validation\Validator;
+
 /**
  * Creates a:
  *      Default widget: TextInput
@@ -24,5 +26,14 @@ namespace Eddmash\PowerOrm\Form\Fields;
  */
 class SlugField extends CharField
 {
-    public $defaultValidators = ['regex_match[/^[-a-zA-Z0-9_]+\Z/]'];
+    /**
+     * @inheritDoc
+     */
+    public function getDefaultValidators()
+    {
+        $validators = parent::getDefaultValidators();
+        $validators[] = Validator::slug();
+        return $validators;
+    }
+
 }

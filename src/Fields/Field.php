@@ -15,6 +15,7 @@ use Eddmash\PowerOrm\Form\Form;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
+use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Base class for all form fields, should nevers be initialized, use its subclasses.
@@ -90,12 +91,6 @@ abstract class Field extends BaseObject implements ContributorInterface
     public $labelSuffix = null;
 
     /**
-     * Default validators to be run on the field.
-     * @var array
-     */
-    public $defaultValidators = [];
-
-    /**
      * A list of some custom validators to run, this provides an easier way of implementing custom validations
      * to your field.
      *
@@ -108,13 +103,16 @@ abstract class Field extends BaseObject implements ContributorInterface
         $this->validators = [];
 
         $this->widget = $this->getWidget();
-
         // replace the default options with the ones passed in.
         foreach ($opts as $key => $value) :
             $this->{$key} = $value;
         endforeach;
 
         $this->initial = ($this->initial == null) ? [] : $this->initial;
+        if (is_string($this->widget)):
+            $widget = $this->widget;
+            $this->widget = $widget::instance();
+        endif;
 
         $this->widget->isRequired = $this->required;
 
@@ -129,11 +127,24 @@ abstract class Field extends BaseObject implements ContributorInterface
             throw new ValueError(' { validators } is expected to be an array of validation to apply on the field');
         endif;
 
-        if ($this->required):
-            $this->validators[] = 'required';
-        endif;
+        $this->validators = array_merge($this->getDefaultValidators(), $this->validators);
+    }
 
-        $this->validators = array_merge($this->defaultValidators, $this->validators);
+    public static function instance($opts = [])
+    {
+        return new static($opts);
+    }
+
+    /**
+     * Default validators.
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
+    public function getDefaultValidators()
+    {
+        return [];
     }
 
     public function prepareValue($value)
@@ -223,16 +234,16 @@ abstract class Field extends BaseObject implements ContributorInterface
         $label = '<label';
 
         if ($id !== '') {
-            $label .= ' for="'.$id.'"';
+            $label .= ' for="' . $id . '"';
         }
 
         if (is_array($attributes) && count($attributes) > 0) {
             foreach ($attributes as $key => $val) {
-                $label .= ' '.$key.'="'.$val.'"';
+                $label .= ' ' . $key . '="' . $val . '"';
             }
         }
 
-        return $label.'>'.$label_text.'</label>';
+        return $label . '>' . $label_text . '</label>';
     }
 
     /**
@@ -286,7 +297,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     /**
      * @param string $name
-     * @param Form   $object
+     * @param Form $object
      *
      * @since 1.1.0
      *
@@ -318,7 +329,7 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function clean($value)
     {
         $value = $this->toPhp($value);
-        $this->validate($value);
+//        $this->validate($value);
         $this->runValidators($value);
 
         return $value;
@@ -336,6 +347,9 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function validate($value)
     {
+        if (empty($value) && $this->required):
+            throw new ValidationError(sprintf('The field %s is required', $this->name), 'required');
+        endif;
     }
 
     /**
@@ -351,10 +365,13 @@ abstract class Field extends BaseObject implements ContributorInterface
         // collect all validation errors for this field
         $errors = [];
         foreach ($this->validators as $validator) :
+
             try {
-                call_user_func_array($validator, $value);
-            } catch (ValidationError $e) {
-                $errors[] = $e;
+                $validator->assert($value);
+            } catch (NestedValidationException $exceptions) {
+                foreach ($exceptions as $exception) {
+                    $errors[] = ['code' => $exception->getId(), 'message' => $exception->getMessage()];
+                }
             }
         endforeach;
 
@@ -386,7 +403,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $attrs['id'] = $this->getAutoId();
         endif;
 
-        return (string) $widget->render($this->getHtmlName(), $this->value(), $attrs);
+        return (string)$widget->render($this->getHtmlName(), $this->value(), $attrs);
     }
 
     /**
