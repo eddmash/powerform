@@ -276,7 +276,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return $this->cleanedData;
     }
 
-    public function _addError($name, $error)
+    public function addError($name, $error)
     {
 
         // for consistency convert them to a validation error object
@@ -319,28 +319,28 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return $errors;
     }
 
-    public function hidden_fields()
+    public function hiddenFields()
     {
-        $hidden_fields = [];
+        $hiddenFields = [];
         foreach ($this->fieldsCache as $name => $field) :
             if ($field->isHidden()):
-                $hidden_fields[$name] = $field;
+                $hiddenFields[$name] = $field;
             endif;
         endforeach;
 
-        return $hidden_fields;
+        return $hiddenFields;
     }
 
-    public function visible_fields()
+    public function visibleFields()
     {
-        $visible_fields = [];
+        $visibleFields = [];
         foreach ($this->fieldsCache as $name => $field) :
             if (!$field->isHidden()):
-                $visible_fields[$name] = $field;
+                $visibleFields[$name] = $field;
             endif;
         endforeach;
 
-        return $visible_fields;
+        return $visibleFields;
     }
 
     /**
@@ -421,7 +421,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $this->cleanedData[$name] = $value;
                 endif;
             } catch (ValidationError $e) {
-                $this->_addError($name, $e);
+                $this->addError($name, $e);
 
                 if (array_key_exists($name, $this->cleanedData)):
                     unset($this->cleanedData[$name]);
@@ -437,7 +437,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             $cleanData = $this->clean();
         } catch (ValidationError $e) {
             $cleanData = null;
-            $this->_addError(null, $e);
+            $this->addError(null, $e);
         }
 
         if ($cleanData):
