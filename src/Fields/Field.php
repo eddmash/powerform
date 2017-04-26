@@ -9,12 +9,13 @@ namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\NotImplemented;
-use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Form\Form;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
@@ -329,7 +330,7 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function clean($value)
     {
         $value = $this->toPhp($value);
-//        $this->validate($value);
+        $this->validate($value);
         $this->runValidators($value);
 
         return $value;
@@ -341,6 +342,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @param $value
      *
+     * @throws ValidationError
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -363,20 +365,18 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
 
         // collect all validation errors for this field
-        $errors = [];
+        $validationErrors = [];
         foreach ($this->validators as $validator) :
 
             try {
-                $validator->assert($value);
-            } catch (NestedValidationException $exceptions) {
-                foreach ($exceptions as $exception) {
-                    $errors[] = ['code' => $exception->getId(), 'message' => $exception->getMessage()];
-                }
+                $validator($value);
+            } catch (ValidationError $error) {
+                $validationErrors=array_merge($validationErrors, $error->getErrorList());
             }
         endforeach;
 
-        if (!empty($errors)):
-            throw new ValidationError($errors);
+        if (!empty($validationErrors)):
+            throw new ValidationError($validationErrors);
         endif;
     }
 
@@ -440,6 +440,20 @@ abstract class Field extends BaseObject implements ContributorInterface
         return $this->widget->valueFromDataCollection($this->form->data, $this->name);
     }
 
+    public function getErrors()
+    {
+        return ArrayHelper::getValue($this->form->errors(), $this->name, []);
+    }
+
+    public function getErrorsAsHtml()
+    {
+        $errors = "";
+        foreach ($this->getErrors() as $nonFieldError) :
+            $errors .=sprintf("<li>%s</li>", $nonFieldError);
+        endforeach;
+        return $errors;
+    }
+
     /**
      *  attribute is True if the form field is a hidden field and False otherwise.
      *
@@ -457,6 +471,14 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function __toString()
     {
         return $this->asWidget();
+    }
+
+    /**
+     * @return string
+     */
+    public function getHelpText()
+    {
+        return $this->helpText;
     }
 
 }

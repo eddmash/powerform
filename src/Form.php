@@ -6,9 +6,9 @@ use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
 use Eddmash\PowerOrm\Exception\KeyError;
-use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
-use Valitron\Validator;
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
 
 /**
  * Class Form.
@@ -20,7 +20,7 @@ use Valitron\Validator;
 abstract class Form extends BaseObject implements \IteratorAggregate
 {
     use FormFieldTrait;
-    const NON_FIELD_ERRORS = '_all_';
+    const nonFieldErrors = '_all_';
 
     /**
      * Indicates if the form is ready for use, if false, this indicates the form is in customization mode and cannot
@@ -286,12 +286,14 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
         if (!$name):
             // todo store non field errors as arrays, current can only store one non field per form
-            $name = self::NON_FIELD_ERRORS;
+            $name = self::nonFieldErrors;
         endif;
 
-        // todo deal with a list of validation errors
+        $this->_errors[$name] = $error->getErrorList();
+        if (array_key_exists($name, $this->cleanedData)) :
+            unset($this->cleanedData[$name]);
+        endif;
 
-        $this->_errors[$name] = $error->getMessage();
     }
 
     public function addField($name, $field)
@@ -299,13 +301,22 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->_fieldSetup($name, $field);
     }
 
-    public function non_field_errors()
+    public function nonFieldErrors()
     {
-        if (array_key_exists(self::NON_FIELD_ERRORS, $this->errors())):
-            return $this->errors()[self::NON_FIELD_ERRORS];
+        if (ArrayHelper::hasKey($this->errors(), self::nonFieldErrors)):
+            return ArrayHelper::getValue($this->errors(), self::nonFieldErrors);
         endif;
 
         return [];
+    }
+
+    public function nonFieldErrorsAsHtml()
+    {
+        $errors = "";
+        foreach ($this->nonFieldErrors() as $nonFieldError) :
+            $errors .=sprintf("<li>%s</li>", $nonFieldError);
+        endforeach;
+        return $errors;
     }
 
     public function hidden_fields()
@@ -333,17 +344,41 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     }
 
     /**
+     * Returns this form rendered as HTML <li>s -- excluding the <ul></ul>.
+     *
      * @return string
      *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function as_p()
+    public function asUl()
     {
         return $this->getHtmlOutput(
             [
-                'row' => '<p>%s <br> %s <br> %s</p>',
+                'row' => '<li> %s %s %s</li>',
+                'errors' => '<li>%s</li>',
+                'helpText' => '<span class="helptext">%s</span>',
+            ]
+        );
+    }
+
+    /**
+     * Returns this form rendered as HTML <p>s.
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
+    public function asParagraph()
+    {
+        return $this->getHtmlOutput(
+            [
+                'row' => '<p> %s <br> %s <br> %s</p>',
+                'errors' => '%s',
+                'helpText' => '<span class="helptext">%s</span>',
             ]
         );
     }
@@ -439,22 +474,42 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         //todo display errros
         /* @var $field Field */
-        $top_errors = $this->non_field_errors();
+        $topErrors = $this->nonFieldErrors();
         $row = '';
+        $errors = '';
+        $helpText = '%s';
         extract($opts);
 
         $output = [];
         $hidden_output = [];
 
         foreach ($this->fieldsCache as $name => $field) :
+            $fieldErrors = '';
+
+            if ($field->getErrors()) :
+                foreach ($field->getErrors() as $error) :
+                    $fieldErrors .= implode(", ", $error->getMessages());
+                endforeach;
+            endif;
+
             if ($field->isHidden()):
+                if ($fieldErrors) :
+                    $topErrors[] = sprintf('(Hidden field (%s) :: %s', $name, $fieldErrors);
+                endif;
                 $hidden_output[] = $field->asWidget();
             else:
-                $output[] = sprintf($row, $field->labelTag(), $field->asWidget(), $field->helpText);
+                if ($fieldErrors) :
+                    $output[] = sprintf($errors, $fieldErrors);
+                endif;
+                $helpTextHtml = sprintf($helpText, $field->getHelpText());
+                $output[] = sprintf($row, $field->labelTag(), $field->asWidget(), $helpTextHtml);
             endif;
         endforeach;
 
         // add errors to the top
+        if ($topErrors) :
+            array_unshift($output, sprintf($errors, implode(", ", $topErrors)));
+        endif;
 
         // add hidden inputs to end
         $output = array_merge($output, $hidden_output);
@@ -508,6 +563,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->setup();
 
-        return $this->as_p();
+        return $this->asParagraph();
     }
 }

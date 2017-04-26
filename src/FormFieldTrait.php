@@ -16,6 +16,11 @@ trait FormFieldTrait
         return new FormFields\DateField($attrs);
     }
 
+    public static function IntegerField($attrs = [])
+    {
+        return new FormFields\IntegerField($attrs);
+    }
+
     public static function EmailField($attrs = [])
     {
         return new FormFields\EmailField($attrs);
