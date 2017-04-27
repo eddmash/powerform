@@ -171,11 +171,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function errors()
     {
-        if (empty($this->_errors)):
+        if (empty($this->errors)):
             $this->fullClean();
         endif;
 
-        return $this->_errors;
+        return $this->errors;
     }
 
     /**
@@ -219,7 +219,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function fullClean()
     {
-        $this->_errors = [];
+        $this->errors = [];
 
         if (!$this->isBound):
             return;
@@ -289,7 +289,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             $name = self::nonFieldErrors;
         endif;
 
-        $this->_errors[$name] = $error->getErrorList();
+        $this->errors[$name] = $error->getErrorList();
         if (array_key_exists($name, $this->cleanedData)) :
             unset($this->cleanedData[$name]);
         endif;
@@ -385,12 +385,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public function _cleanFields()
     {
-        $this->cleanedData = array_diff_key($this->data, $this->_errors);
+        $this->cleanedData = array_diff_key($this->data, $this->errors);
 
         foreach ($this->fieldsCache as $name => $field) :
 
             // if field has failed validation, no need to go on
-            if (array_key_exists($name, $this->_errors)):
+            if (array_key_exists($name, $this->errors)):
                 continue;
             endif;
 
@@ -410,12 +410,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                 $value = $field->clean($value);
 
                 // just in case,  confirm the field has not field validation already
-                if (!array_key_exists($name, $this->_errors)):
+                if (!array_key_exists($name, $this->errors)):
                     $this->cleanedData[$name] = $value;
                 endif;
 
                 // run custom validation by user
-                $field_clean_method = sprintf('clean_%s', $name);
+                $field_clean_method = sprintf('clean%s', ucfirst($name));
                 if ($this->hasMethod($field_clean_method)):
                     $value = call_user_func([$this, $field_clean_method]);
                     $this->cleanedData[$name] = $value;

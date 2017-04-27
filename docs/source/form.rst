@@ -32,8 +32,8 @@ In this associative array, the keys are the field names, which correspond to the
 The values are the data you're trying to validate. These will usually be strings, but there's no requirement that they
 be strings; the type of data you pass depends on the Field, as we'll see in a moment.
 
-Form.isBound
-------------
+Form.isBound()
+--------------
 
 If you need to distinguish between bound and unbound form instances at runtime, check the value of the form's is_bound
 attribute:
@@ -41,17 +41,17 @@ attribute:
 .. code-block:: php
 
     $form = new AuthorForm();
-    var_dump($form->isBound); // false
+    var_dump($form->isBound()); // false
 
     $form = new AuthorForm($data);
-    var_dump($form->isBound); // true
+    var_dump($form->isBound()); // true
 
 Note that passing an empty dictionary creates a bound form with empty data:
 
 .. code-block:: php
 
     $form = new AuthorForm([]);
-    var_dump($form->isBound); // true
+    var_dump($form->isBound()); // true
 
 If you have a bound Form instance and want to change the data somehow, or if you want to bind an unbound Form instance
 to some data, create another Form instance. There is no way to change data in a Form instance.
