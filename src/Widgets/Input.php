@@ -20,6 +20,9 @@ abstract class Input extends Widget
 {
     public $inputType = null;
 
+    /**
+     * {@inheritdoc}
+     */
     public function render($name, $value, $attrs = [], $kwargs = [])
     {
         $finalAttrs = $this->buildAttrs($attrs, ['type' => $this->inputType, 'name' => $name]);

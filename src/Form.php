@@ -92,8 +92,10 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      * @param array $kwargs this accepts any other arguments that need to be passed to the form, usually
      *                      this used to accept user defined arguments
      */
-    public function __construct($data = [], $initial = [], $kwargs = [])
+    public function __construct($kwargs = [])
     {
+        $data = ArrayHelper::pop($kwargs, 'data', []);
+        $initial = ArrayHelper::pop($kwargs, 'initial', []);
         if (!empty($data)):
             $this->isBound = true;
         endif;
@@ -157,7 +159,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->_isReady(__METHOD__);
 
-        return $this->isBound && $this->_formHasErrors();
+        return $this->isBound && $this->formHasErrors();
     }
 
     /**
@@ -225,8 +227,21 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             return;
         endif;
 
-        $this->_cleanFields();
-        $this->_cleanForm();
+        $this->cleanFields();
+        $this->cleanForm();
+        $this->postClean();
+    }
+
+    /**
+     * An internal hook on which to run extra validation work after the form is done with it validation.
+     *
+     * used by ModelForm.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function postClean()
+    {
+
     }
 
     /**
@@ -255,6 +270,19 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endif;
 
         throw new KeyError(sprintf('Field %1$s not found in %2$s', $field_name, static::class));
+    }
+
+    /**
+     * Returns all the field on the current form.
+     *
+     * @return Field[]
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function getFields()
+    {
+        $this->setup();
+
+        return $this->fieldsCache;
     }
 
     /**
@@ -290,6 +318,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endif;
 
         $this->errors[$name] = $error->getErrorList();
+
         if (array_key_exists($name, $this->cleanedData)) :
             unset($this->cleanedData[$name]);
         endif;
@@ -298,7 +327,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public function addField($name, $field)
     {
-        $this->_fieldSetup($name, $field);
+        $this->fieldSetup($name, $field);
     }
 
     public function nonFieldErrors()
@@ -314,8 +343,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $errors = "";
         foreach ($this->nonFieldErrors() as $nonFieldError) :
-            $errors .=sprintf("<li>%s</li>", $nonFieldError);
+            $errors .= sprintf("<li>%s</li>", $nonFieldError);
         endforeach;
+
         return $errors;
     }
 
@@ -383,9 +413,30 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         );
     }
 
-    public function _cleanFields()
+    /**
+     * Gets the initial value for a field.
+     * @param Field $field
+     * @param $fieldName
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     * @return array|mixed|null
+     */
+    public function getInitialForField(Field $field, $fieldName)
     {
-        $this->cleanedData = array_diff_key($this->data, $this->errors);
+        if (ArrayHelper::hasKey($this->initial, $fieldName)):
+            $initial = ArrayHelper::getValue($this->initial, $fieldName);
+        else:
+            $initial = $field->initial;
+        endif;
+
+        if (is_callable($initial)) :
+            $initial = call_user_func($initial);
+        endif;
+
+        return $initial;
+    }
+
+    private function cleanFields()
+    {
 
         foreach ($this->fieldsCache as $name => $field) :
 
@@ -395,11 +446,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             endif;
 
             if ($field->disabled):
-                $value = array_key_exists($name, $this->initial) ? $this->initial[$name] : $field->initial;
+                $value = $this->getInitialForField($field, $name);
             else:
-                if (array_key_exists($name, $this->cleanedData)):
+                if (array_key_exists($name, $this->data)):
 
-                    $value = $field->widget->valueFromDataCollection($this->cleanedData, $name);
+                    $value = $field->widget->valueFromDataCollection($this->data, $name);
                 else:
                     $value = $field->data();
                 endif;
@@ -415,9 +466,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                 endif;
 
                 // run custom validation by user
-                $field_clean_method = sprintf('clean%s', ucfirst($name));
-                if ($this->hasMethod($field_clean_method)):
-                    $value = call_user_func([$this, $field_clean_method]);
+                $fieldCleanMethod = sprintf('clean%s', ucfirst($name));
+                if ($this->hasMethod($fieldCleanMethod)):
+                    $value = call_user_func([$this, $fieldCleanMethod]);
                     $this->cleanedData[$name] = $value;
                 endif;
             } catch (ValidationError $e) {
@@ -431,7 +482,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endforeach;
     }
 
-    public function _cleanForm()
+    private function cleanForm()
     {
         try {
             $cleanData = $this->clean();
@@ -445,7 +496,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endif;
     }
 
-    public function _formHasErrors()
+    private function formHasErrors()
     {
         return empty($this->errors());
     }
@@ -517,7 +568,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return implode(' ', $output);
     }
 
-    protected function _fieldSetup($name, $value)
+    protected function fieldSetup($name, $value)
     {
         if ($value instanceof ContributorInterface):
             $value->contributeToClass($name, $this);
@@ -556,7 +607,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public function __set($name, $value)
     {
-        $this->_fieldSetup($name, $value);
+        $this->fieldSetup($name, $value);
     }
 
     public function __toString()

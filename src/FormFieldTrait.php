@@ -25,6 +25,10 @@ trait FormFieldTrait
     {
         return new FormFields\EmailField($attrs);
     }
+    public static function SlugField($attrs = [])
+    {
+        return new FormFields\SlugField($attrs);
+    }
 
     public static function UrlField($attrs = [])
     {

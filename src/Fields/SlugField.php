@@ -8,6 +8,7 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
+use Eddmash\PowerOrm\Form\Validations\SlugValidator;
 use Respect\Validation\Validator;
 
 /**
@@ -32,7 +33,7 @@ class SlugField extends CharField
     public function getDefaultValidators()
     {
         $validators = parent::getDefaultValidators();
-        $validators[] = Validator::slug();
+        $validators[] = SlugValidator::instance();
         return $validators;
     }
 

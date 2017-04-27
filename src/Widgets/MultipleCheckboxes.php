@@ -21,6 +21,9 @@ class MultipleCheckboxes extends ChoiceInputFields
 {
     public $inputType = 'checkbox';
 
+    /**
+     * {@inheritdoc}
+     */
     public function _prepare_checked($selected_choices)
     {
         $selected = [];

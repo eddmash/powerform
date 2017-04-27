@@ -32,6 +32,9 @@ abstract class ChoiceInputFields extends Input
         endif;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function render($name, $value, $attrs = [], $kwargs = [])
     {
         if (empty($value)):

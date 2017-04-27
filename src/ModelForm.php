@@ -9,7 +9,9 @@
 namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Model\Model;
 
 /**
@@ -65,6 +67,7 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
 
 abstract class ModelForm extends Form
 {
+    private $modelInstance;
     protected $modelClass;
     protected $fields = [];
     protected $excludes = [];
@@ -73,10 +76,22 @@ abstract class ModelForm extends Form
     private $helpTexts = [];
     private $fieldClasses = [];
 
+    /**
+     * @inheritDoc
+     */
+    public function __construct($kwargs=[])
+    {
+        $this->modelInstance = ArrayHelper::pop($kwargs, 'instance', null);
+        if (is_null($this->modelInstance)) :
+            $this->modelInstance = $this->getModel();
+        endif;
+        parent::__construct($kwargs);
+    }
+
     public function setup()
     {
         $fields = fieldsFromModel(
-            $this->getModel(),
+            $this->getModelInstance(),
             $this->fields,
             $this->excludes,
             $this->widgets(),
@@ -155,4 +170,28 @@ abstract class ModelForm extends Form
     {
         return $this->modelClass;
     }
+
+    /**
+     * Return the model instance the form is working on.
+     * @return Model
+     */
+    public function getModelInstance()
+    {
+        return $this->modelInstance;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function postClean()
+    {
+        $exclude = [];
+        try{
+            $this->modelInstance->fullClean($exclude);
+        }catch (ValidationError $error){
+            //todo
+        }
+    }
+
+
 }

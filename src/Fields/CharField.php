@@ -2,6 +2,8 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
+use Eddmash\PowerOrm\Form\Validations\MaxLengthValidator;
+use Eddmash\PowerOrm\Form\Validations\MinLengthValidator;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
 
 
@@ -33,11 +35,11 @@ class CharField extends Field
         parent::__construct($opts);
 
         if ($this->maxLength):
-            $this->validators[] = sprintf('maxLength[%s]', $this->maxLength);
+            $this->validators[] = MaxLengthValidator::instance(['maxLength'=>$this->maxLength]);
         endif;
 
         if ($this->minLength):
-            $this->validators[] = sprintf('minLength[%s]', $this->minLength);
+            $this->validators[] = MinLengthValidator::instance(['minLength'=>$this->minLength]);
         endif;
     }
 

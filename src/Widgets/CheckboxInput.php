@@ -27,25 +27,21 @@ class CheckboxInput extends Widget
 
         // if we have value , add it
         // but since we are dealing with checkbox, this will be checked
-        if ($this->is_checked($value)):
+        if ($this->isChecked($value)):
             $finalAttrs['checked'] = 'checked';
-        endif;
-
-        if (!empty($value)):
-            return (string) $value;
         endif;
 
         return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
     }
 
-    public function is_checked($value)
+    public function isChecked($value)
     {
         return !empty($value);
     }
 
     public function valueFromDataCollection($data, $name)
     {
-        // checkboxes are either checked or not checked they dont take values like other input fields
+        // checkboxes are either checked or not checked they don't take values like other input fields
         if (!array_key_exists($name, $data)):
             return false;
         endif;

@@ -7,16 +7,14 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
+use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
-use Eddmash\PowerOrm\Exception\NotImplemented;
-use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
+use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Form;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
-use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Base class for all form fields, should nevers be initialized, use its subclasses.
@@ -235,16 +233,16 @@ abstract class Field extends BaseObject implements ContributorInterface
         $label = '<label';
 
         if ($id !== '') {
-            $label .= ' for="' . $id . '"';
+            $label .= ' for="'.$id.'"';
         }
 
         if (is_array($attributes) && count($attributes) > 0) {
             foreach ($attributes as $key => $val) {
-                $label .= ' ' . $key . '="' . $val . '"';
+                $label .= ' '.$key.'="'.$val.'"';
             }
         }
 
-        return $label . '>' . $label_text . '</label>';
+        return $label.'>'.$label_text.'</label>';
     }
 
     /**
@@ -371,7 +369,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             try {
                 $validator($value);
             } catch (ValidationError $error) {
-                $validationErrors=array_merge($validationErrors, $error->getErrorList());
+                $validationErrors = array_merge($validationErrors, $error->getErrorList());
             }
         endforeach;
 
@@ -422,12 +420,16 @@ abstract class Field extends BaseObject implements ContributorInterface
         $value = $this->initial;
 
         if (!$this->form->isBound):
-
-            if (array_key_exists($name, $this->form->initial)):
-                $value = $this->form->initial[$name];
+            if (ArrayHelper::hasKey($this->form->initial, $name)):
+                $value = ArrayHelper::getValue($this->form->initial, $name);
             endif;
+
         else:
-            $initial = (array_key_exists($name, $this->form->initial)) ? $this->form->initial[$name] : $this->initial;
+            if (ArrayHelper::hasKey($this->form->initial, $name)) :
+                $initial = ArrayHelper::getValue($this->form->initial, $name);
+            else:
+                $initial = $this->initial;
+            endif;
 
             $value = $this->boundValue($this->data(), $initial);
         endif;
@@ -449,8 +451,9 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
         $errors = "";
         foreach ($this->getErrors() as $nonFieldError) :
-            $errors .=sprintf("<li>%s</li>", $nonFieldError);
+            $errors .= sprintf("<li>%s</li>", $nonFieldError);
         endforeach;
+
         return $errors;
     }
 

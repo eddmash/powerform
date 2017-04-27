@@ -84,7 +84,7 @@ abstract class Widget extends BaseObject
             if ($attrs === true || $attrs === false):
                 $strAttrs .= ' '.$key;
             else:
-                $strAttrs .= sprintf(' %s = %s', $key, $attr);
+                $strAttrs .= sprintf(' %s = "%s" ', $key, $attr);
             endif;
         endforeach;
 

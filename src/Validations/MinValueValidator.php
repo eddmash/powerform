@@ -30,6 +30,7 @@ class MaxValueValidator extends BaseValidator
                 'minValue'
             );
         endif;
+
     }
 
 }

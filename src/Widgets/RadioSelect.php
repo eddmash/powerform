@@ -21,6 +21,9 @@ class RadioSelect extends ChoiceInputFields
 {
     public $inputType = 'radio';
 
+    /**
+     * {@inheritdoc}
+     */
     public function _prepare_checked($selected)
     {
         return (is_array($selected) && empty($selected)) ? $selected : [$selected];
