@@ -612,8 +612,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public function __toString()
     {
-        $this->setup();
-
-        return $this->asParagraph();
+        try {
+            $this->setup();
+            return $this->asParagraph();
+        } catch (\Exception $e) {
+            trigger_error($e->getTraceAsString(),E_USER_ERROR);
+        }
+        return "";
     }
 }

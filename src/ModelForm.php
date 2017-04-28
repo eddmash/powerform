@@ -9,6 +9,8 @@
 namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Exception\ImproperlyConfigured;
+use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
@@ -69,7 +71,7 @@ abstract class ModelForm extends Form
 {
     private $modelInstance;
     protected $modelClass;
-    protected $fields = [];
+    protected $modelFields = [];
     protected $excludes = [];
     private $labels = [];
     private $widgets = [];
@@ -79,20 +81,36 @@ abstract class ModelForm extends Form
     /**
      * @inheritDoc
      */
-    public function __construct($kwargs=[])
+    public function __construct($kwargs = [])
     {
         $this->modelInstance = ArrayHelper::pop($kwargs, 'instance', null);
+
+        parent::__construct($kwargs);
+
+        if (is_null($this->getModelClass())):
+            throw new ValueError('ModelForm has no model class specified.');
+        endif;
+
+        if (empty($this->modelFields) && empty($this->excludes)):
+            throw new ImproperlyConfigured(sprintf("Creating a ModelForm without either the 'modelFields' ".
+                "attribute or the 'exclude' attribute is prohibited; form %s needs updating.", static::class));
+        endif;
+
         if (is_null($this->modelInstance)) :
             $this->modelInstance = $this->getModel();
         endif;
-        parent::__construct($kwargs);
+
     }
 
     public function setup()
     {
+        if($this->modelFields==="__all__"):
+            $this->modelFields = [];
+        endif;
+
         $fields = fieldsFromModel(
             $this->getModelInstance(),
-            $this->fields,
+            $this->modelFields,
             $this->excludes,
             $this->widgets(),
             $this->labels(),
@@ -102,7 +120,7 @@ abstract class ModelForm extends Form
 
         foreach ($fields as $name => $field) :
             // if field is already in the fields, that takes precedence over model field name
-            if (array_key_exists($name, $this->fields)):
+            if (array_key_exists($name, $this->modelFields)):
                 continue;
             endif;
 
@@ -121,6 +139,7 @@ abstract class ModelForm extends Form
     {
         return $this->widgets;
     }
+
     /**
      * Field classes to use on the fields.
      *
@@ -130,6 +149,7 @@ abstract class ModelForm extends Form
     {
         return $this->fieldClasses;
     }
+
     /**
      * Help texts classes to use on the fields.
      *
@@ -139,6 +159,7 @@ abstract class ModelForm extends Form
     {
         return $this->helpTexts;
     }
+
     /**
      * Label to use on the fields.
      *
@@ -186,9 +207,9 @@ abstract class ModelForm extends Form
     public function postClean()
     {
         $exclude = [];
-        try{
+        try {
             $this->modelInstance->fullClean($exclude);
-        }catch (ValidationError $error){
+        } catch (ValidationError $error) {
             //todo
         }
     }
