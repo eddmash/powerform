@@ -10,10 +10,11 @@ namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\BaseOrm;
 use Eddmash\PowerOrm\Exception\ImproperlyConfigured;
+use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
-use Eddmash\PowerOrm\Form\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
+use Eddmash\PowerOrm\Model\Field\AutoField;
 use Eddmash\PowerOrm\Model\Model;
 
 /**
@@ -67,6 +68,26 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
     return $fields;
 }
 
+/**
+ * Populates the model instance with the cleanedData.
+ *
+ * @param Model $model
+ * @param $data
+ * @return Model
+ * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+ */
+function populateModelInstance(Model $model, Form $form)
+{
+    foreach ($model->meta->getFields() as $field) :
+        if (!ArrayHelper::hasKey($form->cleanedData, $field->getName())|| $field instanceof AutoField) :
+            continue;
+        endif;
+        $field->saveFromForm($model, $form->cleanedData[$field->getName()]);
+    endforeach;
+
+    return $model;
+}
+
 abstract class ModelForm extends Form
 {
     private $modelInstance;
@@ -92,8 +113,13 @@ abstract class ModelForm extends Form
         endif;
 
         if (empty($this->modelFields) && empty($this->excludes)):
-            throw new ImproperlyConfigured(sprintf("Creating a ModelForm without either the 'modelFields' ".
-                "attribute or the 'exclude' attribute is prohibited; form %s needs updating.", static::class));
+            throw new ImproperlyConfigured(
+                sprintf(
+                    "Creating a ModelForm without either the 'modelFields' ".
+                    "attribute or the 'exclude' attribute is prohibited; form %s needs updating.",
+                    static::class
+                )
+            );
         endif;
 
         if (is_null($this->modelInstance)) :
@@ -104,7 +130,7 @@ abstract class ModelForm extends Form
 
     public function setup()
     {
-        if($this->modelFields==="__all__"):
+        if ($this->modelFields === "__all__"):
             $this->modelFields = [];
         endif;
 
@@ -207,6 +233,7 @@ abstract class ModelForm extends Form
     public function postClean()
     {
         $exclude = [];
+        $this->modelInstance = populateModelInstance($this->modelInstance, $this);
         try {
             $this->modelInstance->fullClean($exclude);
         } catch (ValidationError $error) {
@@ -214,5 +241,39 @@ abstract class ModelForm extends Form
         }
     }
 
+    /**
+     * Save this form's modelInstance object if commit=true. Otherwise, add a saveM2M() method to the form which can
+     * be called after the instance is saved manually at a later time.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     * @param bool $commit
+     * @return Model
+     * @throws ValueError
+     */
+    public function save($commit = true)
+    {
+        $modelInstance = $this->modelInstance;
+
+        if ($this->errors()) :
+            throw new ValueError(
+                sprintf(
+                    "The %s could not be %s because the data didn't validate.",
+                    $modelInstance->meta->getModelName()
+                )
+            );
+        endif;
+
+        if ($commit) :
+            $this->modelInstance->save();
+            $this->saveM2M();
+        endif;
+
+        return $modelInstance;
+    }
+
+    private function saveM2M()
+    {
+
+    }
 
 }

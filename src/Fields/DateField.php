@@ -10,6 +10,8 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
+use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Widgets\DateInput;
 
 class DateField extends Field
@@ -18,4 +20,26 @@ class DateField extends Field
     {
         return DateInput::instance();
     }
+
+    public function toPhp($value)
+    {
+        if (empty($value)) :
+            return null;
+        elseif ($value instanceof \DateTime) :
+            return $value;
+        elseif (is_string($value)):
+            
+            //todo accept more than one formsts
+            $formats = BaseOrm::getInstance()->dateFormats;
+            foreach ($formats as $format) :
+                if($date = \DateTime::createFromFormat($format, $value)):
+                    return $date;
+                endif;
+            endforeach;
+
+        endif;
+        throw new ValidationError('Enter a valid date.', 'invalid_date');
+    }
+
+
 }

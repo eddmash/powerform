@@ -67,6 +67,14 @@ abstract class Widget extends BaseObject
         return $value;
     }
 
+    /**
+     * Individual widgets know how to handle data passed in to the form for use on the widget.
+     *
+     * @param $data
+     * @param $name
+     * @return null
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
     public function valueFromDataCollection($data, $name)
     {
         return (isset($data[$name])) ? $data[$name] : null;

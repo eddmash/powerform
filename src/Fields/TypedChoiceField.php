@@ -9,7 +9,7 @@
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Exception\TypeError;
-use Eddmash\PowerOrm\Form\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
 
 class TypedChoiceField extends ChoiceField

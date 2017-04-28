@@ -10,7 +10,7 @@ namespace Eddmash\PowerOrm\Form\Fields;
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\ValueError;
-use Eddmash\PowerOrm\Form\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Form;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
 use Eddmash\PowerOrm\Form\Widgets\Widget;

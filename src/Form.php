@@ -6,7 +6,7 @@ use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
 use Eddmash\PowerOrm\Exception\KeyError;
-use Eddmash\PowerOrm\Form\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 

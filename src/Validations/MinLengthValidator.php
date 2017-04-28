@@ -12,7 +12,7 @@
 namespace Eddmash\PowerOrm\Form\Validations;
 
 
-use Eddmash\PowerOrm\Form\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValidationError;
 use Respect\Validation\Validator;
 
 class MinLengthValidator extends BaseValidator

@@ -8,6 +8,8 @@
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
+
 /**
  * This creates a single checkbox on the fields, to create more than one use {@see MultipleCheckboxes}.
  *
@@ -39,14 +41,17 @@ class CheckboxInput extends Widget
         return !empty($value);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function valueFromDataCollection($data, $name)
     {
         // checkboxes are either checked or not checked they don't take values like other input fields
-        if (!array_key_exists($name, $data)):
+        if (!ArrayHelper::hasKey($data, $name)):
             return false;
         endif;
 
-        $value = $data[$name];
+        $value = ArrayHelper::getValue($data, $name);
 
         if (is_bool($value)):
             return $value;
