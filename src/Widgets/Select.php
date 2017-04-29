@@ -8,6 +8,8 @@
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
+
 /**
  * Select widget: <select><option ...>...</select>.
  *
@@ -31,16 +33,17 @@ class Select extends Widget
 
     public $choices = [];
 
-    public function __construct($attrs = [], $kwargs = [])
+    public function __construct($attrs = [])
     {
-        parent::__construct($attrs);
 
-        if (array_key_exists('choices', $kwargs)):
-            $this->choices = $kwargs['choices'];
+        if (ArrayHelper::hasKey($attrs, 'choices')):
+            $this->choices = ArrayHelper::pop($attrs, 'choices');
         endif;
+
+        parent::__construct($attrs);
     }
 
-    public function render($name, $value, $attrs = [], $kwargs = [])
+    public function render($name, $value, $attrs = [])
     {
         if (empty($value)):
             // in case its null, false etc

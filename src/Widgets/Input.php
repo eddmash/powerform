@@ -23,7 +23,7 @@ abstract class Input extends Widget
     /**
      * {@inheritdoc}
      */
-    public function render($name, $value, $attrs = [], $kwargs = [])
+    public function render($name, $value, $attrs = [])
     {
         $finalAttrs = $this->buildAttrs($attrs, ['type' => $this->inputType, 'name' => $name]);
         // if we have value , add it

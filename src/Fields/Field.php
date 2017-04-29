@@ -107,6 +107,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $this->{$key} = $value;
         endforeach;
 
+
         $this->initial = ($this->initial == null) ? [] : $this->initial;
         if (is_string($this->widget)):
             $widget = $this->widget;

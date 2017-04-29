@@ -19,7 +19,7 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 class TextArea extends Widget
 {
-    public function __construct($attrs = [], $kwargs = [])
+    public function __construct($attrs = [])
     {
         $default_attrs = ['cols' => '40', 'rows' => '10'];
         if (!empty($attrs)):
@@ -28,7 +28,7 @@ class TextArea extends Widget
         parent::__construct($attrs);
     }
 
-    public function render($name, $value, $attrs = [], $kwargs = [])
+    public function render($name, $value, $attrs = [])
     {
         $finalAttrs = $this->buildAttrs($attrs, ['name' => $name]);
 

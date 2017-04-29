@@ -20,33 +20,37 @@ use Eddmash\PowerOrm\BaseObject;
  */
 abstract class Widget extends BaseObject
 {
+    /**
+     * Should only contain attributes that will be added to final html element. e.g class, id, e.t.c
+     * @var array
+     */
     public $attrs;
     public $needs_multipart_form = false;
     public $isRequired = false;
 
-    public function __construct($attrs = [], $kwargs = [])
+    public function __construct($attrs = [])
     {
         $this->attrs = $attrs;
     }
 
-    public static function instance($attrs = [], $kwargs = [])
+    public static function instance($attrs = [])
     {
-        return new static($attrs, $kwargs);
+        return new static($attrs);
     }
 
-    public function buildAttrs($attrs = [], $kwargs = [])
+    public function buildAttrs($baseAttrs = [], $extraAttrs = [])
     {
 
-        $finalAttrs = array_merge($this->attrs, $kwargs);
+        $finalAttrs = array_merge($this->attrs, $extraAttrs);
 
-        if (!empty($attrs)):
-            $finalAttrs = array_merge($finalAttrs, $attrs);
+        if (!empty($baseAttrs)):
+            $finalAttrs = array_merge($finalAttrs, $baseAttrs);
         endif;
 
         return $finalAttrs;
     }
 
-    public function render($name, $value, $attrs = [], $kwargs = [])
+    public function render($name, $value, $attrs = [])
     {
         throw new NotImplemented('subclasses of Widget must provide a render() method');
     }

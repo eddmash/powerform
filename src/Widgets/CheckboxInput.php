@@ -23,7 +23,7 @@ use Eddmash\PowerOrm\Helpers\ArrayHelper;
  */
 class CheckboxInput extends Widget
 {
-    public function render($name, $value, $attrs = [], $kwargs = [])
+    public function render($name, $value, $attrs = [])
     {
         $finalAttrs = $this->buildAttrs($attrs, ['type' => 'checkbox', 'name' => $name]);
 

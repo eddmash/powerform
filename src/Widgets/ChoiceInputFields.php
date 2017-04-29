@@ -8,6 +8,8 @@
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
+
 /**
  * Base class of widgets like checkbox and radio which can be more than one.
  * Class ChoiceInputFields.
@@ -18,24 +20,34 @@ namespace Eddmash\PowerOrm\Form\Widgets;
  */
 abstract class ChoiceInputFields extends Input
 {
+    /**
+     * 'choices'=>[
+     *      'gender'=> ['f'=>'Female', 'm'=>'Male' ],
+     *      'bmw'=>'mercedes benz'
+     * ]
+     *
+     * @var array
+     */
     public $choices = [];
     public $inputType = '';
     public $outer_html = '<ul %1$s> %2$s </ul>';
     public $inner_html = '<li>%1$s %2$s </li>';
 
-    public function __construct($attrs = [], $kwargs = [])
+    public function __construct($attrs = [])
     {
+
+        if (ArrayHelper::hasKey($attrs, 'choices')):
+            $this->choices = ArrayHelper::pop($attrs, 'choices', []);
+        endif;
+
         parent::__construct($attrs);
 
-        if (array_key_exists('choices', $kwargs)):
-            $this->choices = $kwargs['choices'];
-        endif;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($name, $value, $attrs = [], $kwargs = [])
+    public function render($name, $value, $attrs = [])
     {
         if (empty($value)):
             // in case its null, false etc
@@ -79,7 +91,7 @@ abstract class ChoiceInputFields extends Input
                 'type' => $this->inputType,
             ]);
 
-            $attrs_['id'] = $attrs_['id'].'_'.$count;
+            $attrs_['id'] = $attrs_['id'] . '_' . $count;
 
             if (is_array($value)):
 

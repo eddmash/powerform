@@ -19,7 +19,6 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "eddmash/powerorm": "1.1.0.x-dev",
     "respect/validation": "^1.1"
   },
   "require-dev": {
@@ -28,6 +27,10 @@
     "psr-4": {
       "Eddmash\\PowerOrm\\Form\\": "src/"
     }
+  },
+  "suggest": {
+    "eddmash/powerormfaker": "powerormfake generates dummy data when using PowerOrm. An extension of Faker library",
+    "eddmash/powerorm": "A very simple but effective php orm"
   },
   "support": {
     "issues": "https://github.com/eddmash/powerormorm/issues"
