@@ -109,6 +109,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->initial = array_change_key_case($initial, CASE_LOWER);
 
         // replace the default options with the ones passed in.
+        dump($kwargs);
         foreach ($kwargs as $key => $value) :
             $this->{$key} = $value;
         endforeach;

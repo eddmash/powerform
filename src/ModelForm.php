@@ -79,7 +79,7 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
 function populateModelInstance(Model $model, Form $form)
 {
     foreach ($model->meta->getFields() as $field) :
-        if (!ArrayHelper::hasKey($form->cleanedData, $field->getName())|| $field instanceof AutoField) :
+        if (!ArrayHelper::hasKey($form->cleanedData, $field->getName()) || $field instanceof AutoField) :
             continue;
         endif;
         $field->saveFromForm($model, $form->cleanedData[$field->getName()]);
@@ -115,21 +115,21 @@ abstract class ModelForm extends Form
         if (empty($this->modelFields) && empty($this->excludes)):
             throw new ImproperlyConfigured(
                 sprintf(
-                    "Creating a ModelForm without either the 'modelFields' ".
+                    "Creating a ModelForm without either the 'modelFields' " .
                     "attribute or the 'exclude' attribute is prohibited; form %s needs updating.",
                     static::class
                 )
             );
         endif;
 
-        if (is_null($this->modelInstance)) :
-            $this->modelInstance = $this->getModel();
-        endif;
-
     }
 
     public function setup()
     {
+        if (is_null($this->modelInstance)) :
+            $this->modelInstance = $this->getModel();
+        endif;
+
         if ($this->modelFields === "__all__"):
             $this->modelFields = [];
         endif;
@@ -149,10 +149,8 @@ abstract class ModelForm extends Form
             if (array_key_exists($name, $this->modelFields)):
                 continue;
             endif;
-
             $this->{$name} = $field;
         endforeach;
-
         parent::setup();
     }
 
