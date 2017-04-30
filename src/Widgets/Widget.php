@@ -25,7 +25,7 @@ abstract class Widget extends BaseObject
      * @var array
      */
     public $attrs;
-    public $needs_multipart_form = false;
+    public $needsMultipartForm = false;
     public $isRequired = false;
 
     public function __construct($attrs = [])
@@ -74,12 +74,14 @@ abstract class Widget extends BaseObject
     /**
      * Individual widgets know how to handle data passed in to the form for use on the widget.
      *
-     * @param $data
+     * @param array $data oftern will come from $_POST
+     * @param array $files most often will come from $_FILES
      * @param $name
-     * @return null
+     * @return mixed
+     * @since 1.1.0
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
-    public function valueFromDataCollection($data, $name)
+    public function valueFromDataCollection($data, $files, $name)
     {
         return (isset($data[$name])) ? $data[$name] : null;
     }

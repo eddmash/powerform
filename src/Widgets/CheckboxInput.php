@@ -44,7 +44,7 @@ class CheckboxInput extends Widget
     /**
      * {@inheritdoc}
      */
-    public function valueFromDataCollection($data, $name)
+    public function valueFromDataCollection($data, $files, $name)
     {
         // checkboxes are either checked or not checked they don't take values like other input fields
         if (!ArrayHelper::hasKey($data, $name)):

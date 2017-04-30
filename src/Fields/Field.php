@@ -12,9 +12,11 @@ use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Form;
+use Eddmash\PowerOrm\Form\Helpers\ErrorList;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
+use Eddmash\PowerOrm\Helpers\Tools;
 
 /**
  * Base class for all form fields, should nevers be initialized, use its subclasses.
@@ -53,9 +55,18 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public $form;
     public $name;
-    /** @var Widget */
+
+    /**
+     * @var Widget
+     */
     public $widget;
+
     public $required = true;
+
+    /**
+     * @var string
+     */
+    public $htmlName;
 
     protected $label = null;
 
@@ -193,24 +204,9 @@ abstract class Field extends BaseObject implements ContributorInterface
     }
 
     /**
-     * Returns fields label.
+     * Wraps the given contents in a <label>.
      *
-     * Lets you generate a <label>. Simple example:
-     *
-     * <pre><code>echo field->label('What is your Name', 'username');</code></pre>
-     * // Would produce:  <label for="username">What is your Name</label>
-     *
-     * Similar to other functions, you can submit an associative array in the third parameter if you prefer to set additional attributes.
-     *
-     * Example:
-     * <pre><code> $attributes = array(
-     *  'class' => 'mycustomclass',
-     *  'style' => 'color: #000;'
-     * );
-     *
-     * echo field->label('What is your Name', 'username', $attributes);</code></pre>
-     *
-     * // Would produce:  <label for="username" class="mycustomclass" style="color: #000;">What is your Name</label>
+     * labelSuffix allows overriding the form's label_suffix.
      *
      * @return string
      *
@@ -218,32 +214,40 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function labelTag()
+    public function labelTag($labelSuffix = null)
     {
-
+        $labelText = $this->getLabelName();
         // if the field is not hidden field set label
         if ($this->widget->isHidden()) :
             return '';
         endif;
 
-        return $this->_formLabel($this->getLabelName(), $this->getIdForLabel(), []);
+        if (empty($labelSuffix)):
+            $labelSuffix = ($this->labelSuffix) ? $this->labelSuffix : $this->form->labelSuffix;
+        endif;
+
+        //Only add the suffix if the label does not end in punctuation.
+        if (!in_array(substr("testers", -1), [':', '?', '.', '!'])):
+            $labelText = sprintf("%s%s", $labelText, $labelSuffix);
+        endif;
+
+        return $this->_formLabel($labelText, $this->getIdForLabel(), []);
     }
 
-    public function _formLabel($label_text = '', $id = '', array $attributes = [])
+    public function _formLabel($labelText = '', $id = '', array $attributes = [])
     {
-        $label = '<label';
+        $attrs = "";
+        if (!empty($id)) :
+            $attrs .= sprintf(' for="%s" ', $id);
+        endif;
 
-        if ($id !== '') {
-            $label .= ' for="'.$id.'"';
-        }
+        if (is_array($attributes) && count($attributes) > 0) :
+            foreach ($attributes as $key => $val) :
+                $attrs .= sprintf(' %s ="%s" ', $key, $val);
+            endforeach;;
+        endif;
 
-        if (is_array($attributes) && count($attributes) > 0) {
-            foreach ($attributes as $key => $val) {
-                $label .= ' '.$key.'="'.$val.'"';
-            }
-        }
-
-        return $label.'>'.$label_text.'</label>';
+        return sprintf('<label %s > %s</label>', $attrs, $labelText);
     }
 
     /**
@@ -261,14 +265,23 @@ abstract class Field extends BaseObject implements ContributorInterface
         return ucfirst($this->label);
     }
 
+    /**
+     * Calculates and returns the ID attribute for this BoundField, if the associated Form has specified autoId.
+     * Returns an empty string otherwise.
+     *
+     * @return string
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function getAutoId()
     {
-        if (is_string($this->form->auto_id) && strpos($this->form->auto_id, '%s')):
-            return sprintf($this->form->auto_id, $this->name);
+        if (is_string($this->form->autoId) && strpos($this->form->autoId, '%s')):
+            return sprintf($this->form->autoId, $this->htmlName);
         endif;
 
-        if (is_bool($this->form->auto_id) && $this->form->auto_id):
-            return $this->name;
+        if (is_bool($this->form->autoId) && $this->form->autoId):
+            return $this->htmlName;
         endif;
 
         return '';
@@ -285,13 +298,33 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function getIdForLabel()
     {
-        $id = (array_key_exists('id', $this->widget->attrs)) ? $this->widget->attrs['id'] : $this->getAutoId();
+        $id = $this->getAutoId();
+
+        if (ArrayHelper::hasKey($this->widget->attrs, 'id')) :
+            $id = ArrayHelper::getValue($this->widget->attrs, 'id');
+        endif;
 
         return $this->widget->getIdForLabel($id);
     }
 
-    public function boundValue($data, $initial)
+    /**
+     * Return the value that should be shown for this field on render of a bound form, given the submitted POST data for
+     * the field and the initial data, if any.
+     *
+     * For most fields, this will simply be data; FileFields need to handle it a bit differently.
+     *
+     * @param $data
+     * @param $initial
+     * @return mixed
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
+    public function boundData($data, $initial)
     {
+        if ($this->disabled):
+            return $initial;
+        endif;
         return $data;
     }
 
@@ -308,6 +341,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         $this->setFromName($name);
         $object->loadField($this);
         $this->form = $object;
+        $this->htmlName = $this->form->addPrefix($this->name);
     }
 
     /**
@@ -323,9 +357,16 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function getHtmlName()
     {
-        return $this->name;
+        return $this->htmlName;
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function clean($value)
     {
         $value = $this->toPhp($value);
@@ -365,6 +406,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
         // collect all validation errors for this field
         $validationErrors = [];
+
         foreach ($this->validators as $validator) :
 
             try {
@@ -416,46 +458,31 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function value()
     {
-        $name = $this->name;
+        $data = $this->getInitial();
 
-        $value = $this->initial;
-
-        if (!$this->form->isBound):
-            if (ArrayHelper::hasKey($this->form->initial, $name)):
-                $value = ArrayHelper::getValue($this->form->initial, $name);
-            endif;
-
-        else:
-            if (ArrayHelper::hasKey($this->form->initial, $name)) :
-                $initial = ArrayHelper::getValue($this->form->initial, $name);
-            else:
-                $initial = $this->initial;
-            endif;
-
-            $value = $this->boundValue($this->data(), $initial);
+        if ($this->form->isBound):
+            $data = $this->boundData($this->data(), $data);
         endif;
 
-        return $this->prepareValue($value);
+        return $this->prepareValue($data);
     }
 
     public function data()
     {
-        return $this->widget->valueFromDataCollection($this->form->data, $this->name);
+        return $this->widget->valueFromDataCollection($this->form->data, $this->form->files, $this->getHtmlName());
     }
 
+    /**
+     * Returns error that relate to this field.
+     *
+     * @return ErrorList
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function getErrors()
     {
-        return ArrayHelper::getValue($this->form->errors(), $this->name, []);
-    }
-
-    public function getErrorsAsHtml()
-    {
-        $errors = "";
-        foreach ($this->getErrors() as $nonFieldError) :
-            $errors .= sprintf("<li>%s</li>", $nonFieldError);
-        endforeach;
-
-        return $errors;
+        return ArrayHelper::getValue($this->form->errors(), $this->name, ErrorList::instance());
     }
 
     /**
@@ -474,7 +501,12 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     public function __toString()
     {
-        return $this->asWidget();
+        try {
+            return $this->asWidget();
+        } catch (\Exception $exception) {
+            Tools::convertExceptionToError($exception);
+        }
+        return "";
     }
 
     /**
@@ -483,6 +515,11 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function getHelpText()
     {
         return $this->helpText;
+    }
+
+    private function getInitial()
+    {
+        return $this->form->getInitialForField($this, $this->name);
     }
 
 }
