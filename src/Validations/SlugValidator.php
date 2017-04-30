@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Validations;
-
 
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Respect\Validation\Validator;
@@ -18,9 +16,9 @@ use Respect\Validation\Validator;
 class SlugValidator extends BaseValidator
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __invoke($value)
+    public function __invoke($value)
     {
         if (!Validator::slug()->validate($value)) :
             throw new ValidationError(

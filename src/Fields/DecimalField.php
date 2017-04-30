@@ -11,8 +11,6 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
-
-
 use Eddmash\PowerOrm\Form\Widgets\NumberInput;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
 use Respect\Validation\Validator;
@@ -23,7 +21,7 @@ class DecimalField extends IntegerField
     public $maxDigits;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function widgetAttrs(Widget $widget)
     {
@@ -35,18 +33,19 @@ class DecimalField extends IntegerField
            endif;
            $attrs['step'] = $step;
        endif;
+
        return $attrs;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getDefaultValidators()
     {
         $validators = parent::getDefaultValidators();
         $validators[] = Validator::floatVal();
+
         return $validators;
     }
-
 
 }

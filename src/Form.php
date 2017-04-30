@@ -72,12 +72,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public $initial = [];
     /**
-     * @var array mostly from $_POST
+     * @var array mostly from
      */
     public $data = [];
 
     /**
-     * @var array mostly from $_FILES
+     * @var array mostly from
      */
     public $files = [];
 
@@ -96,7 +96,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * Takes three arguments.
      *
-     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -136,7 +136,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endforeach;
 
         if(is_null($this->labelSuffix)):
-            $this->labelSuffix = ":";
+            $this->labelSuffix = ':';
         endif;
 
         $this->errors = ErrorDict::instance();
@@ -154,6 +154,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Returns an array of fields to be attached to the form.
+     *
      * @return Field[]
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
@@ -283,8 +284,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      * <pre><code>$form->getField('username);</code></pre>
      *
      * @param $field_name
+     *
      * @return mixed
+     *
      * @throws FieldDoesNotExist
+     *
      * @since 1.0.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -365,7 +369,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Returns only hidden fields.
+     *
      * @return Field[]
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -384,7 +390,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * REturns only non-hidden fields.
+     *
      * @return Field[]
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -462,9 +470,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Gets the initial value for a field.
+     *
      * @param Field $field
      * @param $fieldName
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     *
      * @return array|mixed|null
      */
     public function getInitialForField(Field $field, $fieldName)
@@ -484,6 +494,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Clean form fields.
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -555,7 +566,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Returns True if the form needs to be multipart-encoded, i.e. it has FileInput. Otherwise, False.
+     *
      * @return bool
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -602,7 +615,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             if ($field->getErrors()) :
                 $errs = [];
                 foreach ($field->getErrors() as $error) :
-                    $errs[] = (string)$error;
+                    $errs[] = (string) $error;
                 endforeach;
                 $fieldErrors = ErrorList::instance($errs);
             endif;
@@ -622,7 +635,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $output[] = sprintf($errors, $fieldErrors);
                 endif;
 
-                $helpTextHtml = "";
+                $helpTextHtml = '';
                 if($field->getHelpText()):
                     $helpTextHtml = sprintf($helpText, $field->getHelpText());
                 endif;
@@ -653,6 +666,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * @return Field[]
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -695,20 +709,24 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         try {
             $this->setup();
+
             return $this->asParagraph();
         } catch (\Exception $exception) {
             Tools::convertExceptionToError($exception);
-            return "";
+
+            return '';
         }
     }
 
     /**
      * Returns the field name with a prefix appended, if this Form has a prefix set.
+     *
      * @param $name
+     *
      * @return string
      */
     public function addPrefix($name)
     {
-        return ($this->prefix) ? sprintf("%s-%s", $this->prefix, $name) : $name;
+        return ($this->prefix) ? sprintf('%s-%s', $this->prefix, $name) : $name;
     }
 }

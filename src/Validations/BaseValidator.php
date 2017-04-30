@@ -8,24 +8,21 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Validations;
-
 
 use Eddmash\PowerOrm\BaseOrm;
 
 class BaseValidator
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function __construct($kwargs=[])
+    public function __construct($kwargs = [])
     {
         BaseOrm::configure($this, $kwargs);
     }
 
-
-    public static function instance($kwargs=[])
+    public static function instance($kwargs = [])
     {
         return new static($kwargs);
     }

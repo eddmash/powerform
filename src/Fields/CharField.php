@@ -6,7 +6,6 @@ use Eddmash\PowerOrm\Form\Validations\MaxLengthValidator;
 use Eddmash\PowerOrm\Form\Validations\MinLengthValidator;
 use Eddmash\PowerOrm\Form\Widgets\Widget;
 
-
 /**
  * Creates a :
  *      Default widget: TextInput
@@ -35,11 +34,11 @@ class CharField extends Field
         parent::__construct($opts);
 
         if ($this->maxLength):
-            $this->validators[] = MaxLengthValidator::instance(['maxLength'=>$this->maxLength]);
+            $this->validators[] = MaxLengthValidator::instance(['maxLength' => $this->maxLength]);
         endif;
 
         if ($this->minLength):
-            $this->validators[] = MinLengthValidator::instance(['minLength'=>$this->minLength]);
+            $this->validators[] = MinLengthValidator::instance(['minLength' => $this->minLength]);
         endif;
     }
 

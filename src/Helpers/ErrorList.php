@@ -11,16 +11,13 @@
 
 namespace Eddmash\PowerOrm\Form\Helpers;
 
-use ArrayIterator;
 use Eddmash\PowerOrm\Exception\NotImplemented;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Helpers\Tools;
 
-
 /**
  * A collection of errors that knows how to display itself in various formats.
  *
- * @package Eddmash\PowerOrm\Form
  * @since 1.1.0
  *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -31,50 +28,52 @@ class ErrorList extends Collection
      * @var \Exception[]
      */
     protected $data = [];
-    private $cssClass = "errorlist";
+    private $cssClass = 'errorlist';
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct(array $data, $cssClass = null)
     {
         parent::__construct($data);
         if (!is_null($cssClass)):
-            $this->cssClass = sprintf("%s %s", $this->cssClass, $cssClass);
+            $this->cssClass = sprintf('%s %s', $this->cssClass, $cssClass);
         endif;
     }
 
-    public static function instance($data=[], $cssClass = null)
+    public static function instance($data = [], $cssClass = null)
     {
         return new static($data, $cssClass);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __toString()
+    public function __toString()
     {
         try {
             return $this->asUl();
         } catch (\Exception $exception) {
             Tools::convertExceptionToError($exception);
+
             return '';
         }
     }
 
     /**
      * Returns errors a html list.
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
     private function asUl()
     {
-        $errors = "";
+        $errors = '';
         foreach ($this->data as $error) :
-            $errors .= sprintf("<li>%s</li>", (string)$error);
+            $errors .= sprintf('<li>%s</li>', (string) $error);
         endforeach;
+
         return sprintf('<ul class="%s">%s</ul>', $this->cssClass, $errors);
     }
 
@@ -88,11 +87,11 @@ class ErrorList extends Collection
         return ArrayHelper::getValue($this->data, $name, $default);
     }
 
-
     /**
-     * Adds more error to the list
+     * Adds more error to the list.
      *
      * @param array $data
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -104,6 +103,7 @@ class ErrorList extends Collection
 
     /**
      * @return array
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>

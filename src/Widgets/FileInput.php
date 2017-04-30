@@ -11,21 +11,19 @@
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
-
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 
 class FileInput extends Input
 {
-    public $inputType = "file";
+    public $inputType = 'file';
     public $needsMultipartForm = true;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function valueFromDataCollection($data, $file, $name)
     {
         return ArrayHelper::getValue($file, $name);
     }
-
 
 }

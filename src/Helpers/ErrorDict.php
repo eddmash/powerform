@@ -11,17 +11,14 @@
 
 namespace Eddmash\PowerOrm\Form\Helpers;
 
-
 use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Helpers\Tools;
-use Traversable;
 
 class ErrorDict extends Collection
 {
-
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct(array $data = [])
     {
@@ -31,8 +28,11 @@ class ErrorDict extends Collection
 
     /**
      * Ensures we are working with an associative array.
+     *
      * @param $data
+     *
      * @throws ValueError
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -45,26 +45,28 @@ class ErrorDict extends Collection
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __toString()
+    public function __toString()
     {
         try {
             return $this->asUl();
         } catch (\Exception $exception) {
             Tools::convertExceptionToError($exception);
-            return "";
+
+            return '';
         }
     }
 
     private function asUl()
     {
-        $errors = "";
+        $errors = '';
         foreach ($this->data as $datum) {
             foreach ($datum as $name => $item) {
-                $errors .= sprintf("<li>%s %s</li>", $name, (string)$item);
+                $errors .= sprintf('<li>%s %s</li>', $name, (string) $item);
             }
         }
+
         return sprintf('<ul class="errorlist">%s</ul>', $errors);
     }
 
@@ -81,17 +83,17 @@ class ErrorDict extends Collection
         $this->data[$name] = $value;
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function asData()
     {
         $err = [];
-        foreach ($this->data as $name=>$datum) {
+        foreach ($this->data as $name => $datum) {
 
             $err[$name] = $datum;
         }
+
         return $err;
     }
 

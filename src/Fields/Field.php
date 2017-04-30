@@ -118,7 +118,6 @@ abstract class Field extends BaseObject implements ContributorInterface
             $this->{$key} = $value;
         endforeach;
 
-
         $this->initial = ($this->initial == null) ? [] : $this->initial;
         if (is_string($this->widget)):
             $widget = $this->widget;
@@ -183,7 +182,9 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     /**
      * Returns the Widget to use for this form field.
+     *
      * @return Widget
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -227,8 +228,8 @@ abstract class Field extends BaseObject implements ContributorInterface
         endif;
 
         //Only add the suffix if the label does not end in punctuation.
-        if (!in_array(substr("testers", -1), [':', '?', '.', '!'])):
-            $labelText = sprintf("%s%s", $labelText, $labelSuffix);
+        if (!in_array(substr('testers', -1), [':', '?', '.', '!'])):
+            $labelText = sprintf('%s%s', $labelText, $labelSuffix);
         endif;
 
         return $this->_formLabel($labelText, $this->getIdForLabel(), []);
@@ -236,7 +237,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     public function _formLabel($labelText = '', $id = '', array $attributes = [])
     {
-        $attrs = "";
+        $attrs = '';
         if (!empty($id)) :
             $attrs .= sprintf(' for="%s" ', $id);
         endif;
@@ -244,7 +245,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         if (is_array($attributes) && count($attributes) > 0) :
             foreach ($attributes as $key => $val) :
                 $attrs .= sprintf(' %s ="%s" ', $key, $val);
-            endforeach;;
+            endforeach;
         endif;
 
         return sprintf('<label %s > %s</label>', $attrs, $labelText);
@@ -270,6 +271,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      * Returns an empty string otherwise.
      *
      * @return string
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -315,7 +317,9 @@ abstract class Field extends BaseObject implements ContributorInterface
      *
      * @param $data
      * @param $initial
+     *
      * @return mixed
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -325,12 +329,13 @@ abstract class Field extends BaseObject implements ContributorInterface
         if ($this->disabled):
             return $initial;
         endif;
+
         return $data;
     }
 
     /**
      * @param string $name
-     * @param Form $object
+     * @param Form   $object
      *
      * @since 1.1.0
      *
@@ -362,7 +367,9 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     /**
      * @param $value
+     *
      * @return mixed
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -383,6 +390,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      * @param $value
      *
      * @throws ValidationError
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -444,7 +452,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $attrs['id'] = $this->getAutoId();
         endif;
 
-        return (string)$widget->render($this->getHtmlName(), $this->value(), $attrs);
+        return (string) $widget->render($this->getHtmlName(), $this->value(), $attrs);
     }
 
     /**
@@ -476,6 +484,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      * Returns error that relate to this field.
      *
      * @return ErrorList
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -506,7 +515,8 @@ abstract class Field extends BaseObject implements ContributorInterface
         } catch (\Exception $exception) {
             Tools::convertExceptionToError($exception);
         }
-        return "";
+
+        return '';
     }
 
     /**

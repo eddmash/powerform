@@ -6,7 +6,7 @@ use Eddmash\PowerOrm\Exception\ValidationError;
 use Respect\Validation\Validator as RespectValidator;
 
 /**
- * http://respect.github.io/Validation/docs/max.html
+ * http://respect.github.io/Validation/docs/max.html.
  *
  * (c) Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
  *
@@ -19,9 +19,9 @@ class MaxValueValidator extends BaseValidator
     public $inclusive = false;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __invoke($value)
+    public function __invoke($value)
     {
 
         if (!RespectValidator::max($this->max, $this->inclusive)->validate($value)):

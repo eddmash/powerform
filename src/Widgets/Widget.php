@@ -21,7 +21,8 @@ use Eddmash\PowerOrm\BaseObject;
 abstract class Widget extends BaseObject
 {
     /**
-     * Should only contain attributes that will be added to final html element. e.g class, id, e.t.c
+     * Should only contain attributes that will be added to final html element. e.g class, id, e.t.c.
+     *
      * @var array
      */
     public $attrs;
@@ -74,10 +75,12 @@ abstract class Widget extends BaseObject
     /**
      * Individual widgets know how to handle data passed in to the form for use on the widget.
      *
-     * @param array $data oftern will come from $_POST
+     * @param array $data  oftern will come from $_POST
      * @param array $files most often will come from $_FILES
      * @param $name
+     *
      * @return mixed
+     *
      * @since 1.1.0
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */

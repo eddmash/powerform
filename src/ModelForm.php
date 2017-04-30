@@ -73,6 +73,7 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
  *
  * @param Model $model
  * @param $data
+ *
  * @return Model
  * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
  */
@@ -100,7 +101,7 @@ abstract class ModelForm extends Form
     private $fieldClasses = [];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct($kwargs = [])
     {
@@ -115,7 +116,7 @@ abstract class ModelForm extends Form
         if (empty($this->modelFields) && empty($this->excludes)):
             throw new ImproperlyConfigured(
                 sprintf(
-                    "Creating a ModelForm without either the 'modelFields' " .
+                    "Creating a ModelForm without either the 'modelFields' ".
                     "attribute or the 'exclude' attribute is prohibited; form %s needs updating.",
                     static::class
                 )
@@ -130,7 +131,7 @@ abstract class ModelForm extends Form
             $this->modelInstance = $this->getModel();
         endif;
 
-        if ($this->modelFields === "__all__"):
+        if ($this->modelFields === '__all__'):
             $this->modelFields = [];
         endif;
 
@@ -218,6 +219,7 @@ abstract class ModelForm extends Form
 
     /**
      * Return the model instance the form is working on.
+     *
      * @return Model
      */
     public function getModelInstance()
@@ -226,7 +228,7 @@ abstract class ModelForm extends Form
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function postClean()
     {
@@ -244,8 +246,11 @@ abstract class ModelForm extends Form
      * be called after the instance is saved manually at a later time.
      *
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     *
      * @param bool $commit
+     *
      * @return Model
+     *
      * @throws ValueError
      */
     public function save($commit = true)

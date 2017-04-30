@@ -17,17 +17,15 @@ use Traversable;
 
 abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
-
     protected $data;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct(array $data)
     {
         $this->data = $data;
     }
-
 
     public static function instance($data = [])
     {
@@ -36,7 +34,9 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
 
     /**
      * Check if error dict is empty.
+     *
      * @return bool
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -47,10 +47,13 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
+     *
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     *
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     *                     <b>Traversable</b>
+     *
      * @since 5.0.0
      */
     public function getIterator()
@@ -59,12 +62,15 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
+     *
      * @link http://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     *             </p>
+     *             <p>
+     *             The return value is cast to an integer
+     *
      * @since 5.1.0
      */
     public function count()
@@ -74,14 +80,14 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
 
     /**
      * @return array
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public abstract function asData();
+    abstract public function asData();
 
-
-    public abstract function get($name, $default = null);
+    abstract public function get($name, $default = null);
 
     public function remove($name, $value)
     {
@@ -92,15 +98,19 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
      * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     *                      An offset to check for.
+     *                      </p>
+     *
+     * @return bool true on success or false on failure.
+     *              </p>
+     *              <p>
+     *              The return value will be casted to boolean if non-boolean was returned
+     *
      * @since 5.0.0
      */
     public function offsetExists($offset)
@@ -109,12 +119,16 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     *
      * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
+     *                      The offset to retrieve.
+     *                      </p>
+     *
+     * @return mixed Can return all value types
+     *
      * @since 5.0.0
      */
     public function offsetGet($offset)
@@ -123,15 +137,17 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * Offset to set
+     * Offset to set.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     *
      * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
+     *                      The offset to assign the value to.
+     *                      </p>
+     * @param mixed $value  <p>
+     *                      The value to set.
+     *                      </p>
+     *
      * @since 5.0.0
      */
     public function offsetSet($offset, $value)
@@ -140,18 +156,19 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
      * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
+     *                      The offset to unset.
+     *                      </p>
+     *
      * @since 5.0.0
      */
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
     }
-
 
 }

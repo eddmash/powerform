@@ -13,15 +13,15 @@ use Respect\Validation\Validator as RespectValidator;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class MaxValueValidator extends BaseValidator
+class MinValueValidator extends BaseValidator
 {
     public $min;
     public $inclusive = false;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __invoke($value)
+    public function __invoke($value)
     {
 
         if (!RespectValidator::max($this->min, $this->inclusive)->validate($value)):
