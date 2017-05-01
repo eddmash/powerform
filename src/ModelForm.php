@@ -62,7 +62,10 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
             $kwargs['fieldClass'] = $fieldClasses[$name];
         endif;
 
-        $fields[$name] = $field->formfield($kwargs);
+        if($fieldClass = $field->formfield($kwargs)):
+
+            $fields[$name] = $fieldClass;
+        endif;
     endforeach;
 
     return $fields;
@@ -107,8 +110,6 @@ abstract class ModelForm extends Form
     {
         $this->modelInstance = ArrayHelper::pop($kwargs, 'instance', null);
 
-        parent::__construct($kwargs);
-
         if (is_null($this->getModelClass())):
             throw new ValueError('ModelForm has no model class specified.');
         endif;
@@ -116,13 +117,14 @@ abstract class ModelForm extends Form
         if (empty($this->modelFields) && empty($this->excludes)):
             throw new ImproperlyConfigured(
                 sprintf(
-                    "Creating a ModelForm without either the 'modelFields' ".
+                    "Creating a ModelForm without either the 'modelFields' " .
                     "attribute or the 'exclude' attribute is prohibited; form %s needs updating.",
                     static::class
                 )
             );
         endif;
 
+        parent::__construct($kwargs);
     }
 
     public function setup()
@@ -147,11 +149,13 @@ abstract class ModelForm extends Form
 
         foreach ($fields as $name => $field) :
             // if field is already in the fields, that takes precedence over model field name
-            if (array_key_exists($name, $this->modelFields)):
+            if (ArrayHelper::hasKey($this->fields(), $name)):
                 continue;
             endif;
-            $this->{$name} = $field;
+
+            $this->addField($name, $field);
         endforeach;
+
         parent::setup();
     }
 
@@ -176,7 +180,7 @@ abstract class ModelForm extends Form
     }
 
     /**
-     * Help texts classes to use on the fields.
+     * Help texts to use on the fields.
      *
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
