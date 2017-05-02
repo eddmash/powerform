@@ -128,17 +128,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->initial = $initial;
 
         // replace the default options with the ones passed in.
-<<<<<<< HEAD
+
         if ($kwargs) :
             foreach ($kwargs as $key => $value) :
                 $this->{$key} = $value;
             endforeach;
         endif;
-
-=======
-        foreach ($kwargs as $key => $value) :
-            $this->{$key} = $value;
-        endforeach;
 
         if(is_null($this->labelSuffix)):
             $this->labelSuffix = ':';
@@ -147,7 +142,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->errors = ErrorDict::instance();
 
         $this->setup();
->>>>>>> 490f4e79814e655accccbfdfc195449804f36284
+
     }
 
     /**

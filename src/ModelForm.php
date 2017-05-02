@@ -124,10 +124,6 @@ abstract class ModelForm extends Form
      */
     public function __construct($kwargs = [])
     {
-<<<<<<< HEAD
-=======
-        $this->modelInstance = ArrayHelper::pop($kwargs, 'instance', null);
->>>>>>> 490f4e79814e655accccbfdfc195449804f36284
 
         if (is_null($this->getModelClass())):
             throw new ValueError('ModelForm has no model class specified.');
@@ -143,14 +139,9 @@ abstract class ModelForm extends Form
             );
         endif;
 
-<<<<<<< HEAD
         if ($this->modelFields === "__all__"):
             $this->modelFields = [];
         endif;
-=======
-        parent::__construct($kwargs);
-    }
->>>>>>> 490f4e79814e655accccbfdfc195449804f36284
 
         $instance = ArrayHelper::pop($kwargs, 'instance', null);
 
@@ -164,7 +155,6 @@ abstract class ModelForm extends Form
             $this->modelInstance = $this->getModel();
         endif;
 
-<<<<<<< HEAD
         $kwargs['initial'] = $initial;
 
         parent::__construct($kwargs);
@@ -173,11 +163,6 @@ abstract class ModelForm extends Form
 
     public function setup()
     {
-=======
-        if ($this->modelFields === '__all__'):
-            $this->modelFields = [];
-        endif;
->>>>>>> 490f4e79814e655accccbfdfc195449804f36284
 
         $fields = fieldsFromModel(
             $this->modelInstance,
