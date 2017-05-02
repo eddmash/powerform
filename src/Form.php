@@ -5,6 +5,7 @@ namespace Eddmash\PowerOrm\Form;
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
+use Eddmash\PowerOrm\Exception\ImproperlyConfigured;
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
@@ -102,19 +103,15 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
         $this->data = $data;
 
-        if (empty($initial)):
-            $initial = [];
-        endif;
-
-        $this->initial = array_change_key_case($initial, CASE_LOWER);
+        $this->initial = $initial;
 
         // replace the default options with the ones passed in.
-        dump($kwargs);
-        foreach ($kwargs as $key => $value) :
-            $this->{$key} = $value;
-        endforeach;
+        if ($kwargs) :
+            foreach ($kwargs as $key => $value) :
+                $this->{$key} = $value;
+            endforeach;
+        endif;
 
-        $this->init();
     }
 
     /**

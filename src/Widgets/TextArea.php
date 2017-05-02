@@ -22,7 +22,7 @@ class TextArea extends Widget
     public function __construct($attrs = [])
     {
         $default_attrs = ['cols' => '40', 'rows' => '10'];
-        if (!empty($attrs)):
+        if ($attrs):
             $attrs = array_merge($default_attrs, $attrs);
         endif;
         parent::__construct($attrs);

@@ -17,6 +17,22 @@ use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Model\Field\AutoField;
 use Eddmash\PowerOrm\Model\Model;
 
+function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
+{
+    $values = [];
+    foreach ($model->meta->getConcreteFields() as $concreteField) :
+        if ($fields && !in_array($concreteField->getName(), $fields)) :
+            continue;
+        endif;
+        if ($exclude && in_array($concreteField->getName(), $exclude)) :
+            continue;
+        endif;
+        $values[$concreteField->getName()] = $concreteField->valueFromObject($model);
+    endforeach;
+
+    return $values;
+}
+
 /**
  * @param Model $model
  * @param $requiredFields
@@ -104,9 +120,6 @@ abstract class ModelForm extends Form
      */
     public function __construct($kwargs = [])
     {
-        $this->modelInstance = ArrayHelper::pop($kwargs, 'instance', null);
-
-        parent::__construct($kwargs);
 
         if (is_null($this->getModelClass())):
             throw new ValueError('ModelForm has no model class specified.');
@@ -115,27 +128,40 @@ abstract class ModelForm extends Form
         if (empty($this->modelFields) && empty($this->excludes)):
             throw new ImproperlyConfigured(
                 sprintf(
-                    "Creating a ModelForm without either the 'modelFields' " .
+                    "Creating a ModelForm without either the 'modelFields' ".
                     "attribute or the 'exclude' attribute is prohibited; form %s needs updating.",
                     static::class
                 )
             );
         endif;
 
-    }
-
-    public function setup()
-    {
-        if (is_null($this->modelInstance)) :
-            $this->modelInstance = $this->getModel();
-        endif;
-
         if ($this->modelFields === "__all__"):
             $this->modelFields = [];
         endif;
 
+        $instance = ArrayHelper::pop($kwargs, 'instance', null);
+
+        $initial = ArrayHelper::getValue($kwargs, 'initial', []);
+
+        if ($instance) :
+            $this->modelInstance = $instance;
+            $modelInitial = getValuesFromModelInstance($this->modelInstance, $this->modelFields, $this->excludes);
+            $initial = array_merge($modelInitial, $initial);
+        else:
+            $this->modelInstance = $this->getModel();
+        endif;
+
+        $kwargs['initial'] = $initial;
+
+        parent::__construct($kwargs);
+
+    }
+
+    public function setup()
+    {
+
         $fields = fieldsFromModel(
-            $this->getModelInstance(),
+            $this->modelInstance,
             $this->modelFields,
             $this->excludes,
             $this->widgets(),
