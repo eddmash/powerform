@@ -9,7 +9,6 @@
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Form\Validations\SlugValidator;
-use Respect\Validation\Validator;
 
 /**
  * Creates a:
@@ -28,12 +27,13 @@ use Respect\Validation\Validator;
 class SlugField extends CharField
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getDefaultValidators()
     {
         $validators = parent::getDefaultValidators();
         $validators[] = SlugValidator::instance();
+
         return $validators;
     }
 

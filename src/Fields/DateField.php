@@ -24,11 +24,11 @@ class DateField extends Field
     public function toPhp($value)
     {
         if (empty($value)) :
-            return null;
+            return;
         elseif ($value instanceof \DateTime) :
             return $value;
         elseif (is_string($value)):
-            
+
             //todo accept more than one formsts
             $formats = BaseOrm::getInstance()->dateFormats;
             foreach ($formats as $format) :
@@ -40,6 +40,5 @@ class DateField extends Field
         endif;
         throw new ValidationError('Enter a valid date.', 'invalid_date');
     }
-
 
 }

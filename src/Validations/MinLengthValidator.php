@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Validations;
-
 
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Respect\Validation\Validator;
@@ -20,9 +18,9 @@ class MinLengthValidator extends BaseValidator
     public $minLength;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __invoke($value)
+    public function __invoke($value)
     {
         if (!Validator::length(null, $this->minLength, true)->validate($value)) :
             throw new ValidationError(
@@ -32,8 +30,7 @@ class MinLengthValidator extends BaseValidator
                 ),
                 'max_length'
             );
-        endif;;
+        endif;
     }
-
 
 }

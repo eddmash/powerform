@@ -78,7 +78,10 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
             $kwargs['fieldClass'] = $fieldClasses[$name];
         endif;
 
-        $fields[$name] = $field->formfield($kwargs);
+        if($fieldClass = $field->formfield($kwargs)):
+
+            $fields[$name] = $fieldClass;
+        endif;
     endforeach;
 
     return $fields;
@@ -89,6 +92,7 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
  *
  * @param Model $model
  * @param $data
+ *
  * @return Model
  * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
  */
@@ -116,10 +120,14 @@ abstract class ModelForm extends Form
     private $fieldClasses = [];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct($kwargs = [])
     {
+<<<<<<< HEAD
+=======
+        $this->modelInstance = ArrayHelper::pop($kwargs, 'instance', null);
+>>>>>>> 490f4e79814e655accccbfdfc195449804f36284
 
         if (is_null($this->getModelClass())):
             throw new ValueError('ModelForm has no model class specified.');
@@ -135,9 +143,14 @@ abstract class ModelForm extends Form
             );
         endif;
 
+<<<<<<< HEAD
         if ($this->modelFields === "__all__"):
             $this->modelFields = [];
         endif;
+=======
+        parent::__construct($kwargs);
+    }
+>>>>>>> 490f4e79814e655accccbfdfc195449804f36284
 
         $instance = ArrayHelper::pop($kwargs, 'instance', null);
 
@@ -151,6 +164,7 @@ abstract class ModelForm extends Form
             $this->modelInstance = $this->getModel();
         endif;
 
+<<<<<<< HEAD
         $kwargs['initial'] = $initial;
 
         parent::__construct($kwargs);
@@ -159,6 +173,11 @@ abstract class ModelForm extends Form
 
     public function setup()
     {
+=======
+        if ($this->modelFields === '__all__'):
+            $this->modelFields = [];
+        endif;
+>>>>>>> 490f4e79814e655accccbfdfc195449804f36284
 
         $fields = fieldsFromModel(
             $this->modelInstance,
@@ -172,11 +191,13 @@ abstract class ModelForm extends Form
 
         foreach ($fields as $name => $field) :
             // if field is already in the fields, that takes precedence over model field name
-            if (array_key_exists($name, $this->modelFields)):
+            if (ArrayHelper::hasKey($this->fields(), $name)):
                 continue;
             endif;
-            $this->{$name} = $field;
+
+            $this->addField($name, $field);
         endforeach;
+
         parent::setup();
     }
 
@@ -201,7 +222,7 @@ abstract class ModelForm extends Form
     }
 
     /**
-     * Help texts classes to use on the fields.
+     * Help texts to use on the fields.
      *
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
@@ -244,6 +265,7 @@ abstract class ModelForm extends Form
 
     /**
      * Return the model instance the form is working on.
+     *
      * @return Model
      */
     public function getModelInstance()
@@ -252,7 +274,7 @@ abstract class ModelForm extends Form
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function postClean()
     {
@@ -270,8 +292,11 @@ abstract class ModelForm extends Form
      * be called after the instance is saved manually at a later time.
      *
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     *
      * @param bool $commit
+     *
      * @return Model
+     *
      * @throws ValueError
      */
     public function save($commit = true)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the ci4 package.
  *
@@ -8,22 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Eddmash\PowerOrm\Form\Validations;
+namespace Eddmash\PowerOrm\Form\Widgets;
 
-use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
 
-class BaseValidator
+class FileInput extends Input
 {
+    public $inputType = 'file';
+    public $needsMultipartForm = true;
+
     /**
      * {@inheritdoc}
      */
-    public function __construct($kwargs = [])
+    public function valueFromDataCollection($data, $file, $name)
     {
-        BaseOrm::configure($this, $kwargs);
+        return ArrayHelper::getValue($file, $name);
     }
 
-    public static function instance($kwargs = [])
-    {
-        return new static($kwargs);
-    }
 }

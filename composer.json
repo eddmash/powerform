@@ -1,5 +1,5 @@
 {
-  "name": "eddmash/powerormform",
+  "name": "eddmash/powerform",
   "type": "library",
   "keywords": [
     "orm",
@@ -7,7 +7,7 @@
     "form"
   ],
   "description": "Provides form that make it easy to work with powerorm models",
-  "homepage": "https://github.com/eddmash/powerormform",
+  "homepage": "https://github.com/eddmash/powerform",
   "license": "MIT",
   "authors": [
     {

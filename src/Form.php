@@ -4,12 +4,16 @@ namespace Eddmash\PowerOrm\Form;
 
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
+use Eddmash\PowerOrm\Exception\FieldDoesNotExist;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
 use Eddmash\PowerOrm\Exception\ImproperlyConfigured;
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\Field;
+use Eddmash\PowerOrm\Form\Helpers\ErrorDict;
+use Eddmash\PowerOrm\Form\Helpers\ErrorList;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
+use Eddmash\PowerOrm\Helpers\Tools;
 
 /**
  * Class Form.
@@ -22,6 +26,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 {
     use FormFieldTrait;
     const nonFieldErrors = '_all_';
+
+    /**
+     * @var ErrorDict
+     */
+    private $errors;
 
     /**
      * Indicates if the form is ready for use, if false, this indicates the form is in customization mode and cannot
@@ -60,9 +69,22 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      *
      * @var string
      */
-    public $auto_id = 'id_%s';
+    public $autoId = 'id_%s';
+
     public $initial = [];
+    /**
+     * @var array mostly from
+     */
     public $data = [];
+
+    /**
+     * @var array mostly from
+     */
+    public $files = [];
+
+    public $prefix;
+    public $labelSuffix;
+
     public $isBound = false;
 
     /**
@@ -75,7 +97,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * Takes three arguments.
      *
-     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -106,12 +128,26 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->initial = $initial;
 
         // replace the default options with the ones passed in.
+<<<<<<< HEAD
         if ($kwargs) :
             foreach ($kwargs as $key => $value) :
                 $this->{$key} = $value;
             endforeach;
         endif;
 
+=======
+        foreach ($kwargs as $key => $value) :
+            $this->{$key} = $value;
+        endforeach;
+
+        if(is_null($this->labelSuffix)):
+            $this->labelSuffix = ':';
+        endif;
+
+        $this->errors = ErrorDict::instance();
+
+        $this->setup();
+>>>>>>> 490f4e79814e655accccbfdfc195449804f36284
     }
 
     /**
@@ -124,6 +160,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Returns an array of fields to be attached to the form.
+     *
      * @return Field[]
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
@@ -135,13 +172,15 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public function setup()
     {
-        $fields = $this->fields();
-        // this sets the form fields to the form.
-        foreach ($fields as $name => $field) :
-            $this->addField($name, $field);
-        endforeach;
+        if (!$this->ready):
+            $fields = $this->fields();
+            // this sets the form fields to the form.
+            foreach ($fields as $name => $field) :
+                $this->addField($name, $field);
+            endforeach;
 
-        $this->ready = true;
+            $this->ready = true;
+        endif;
     }
 
     /**
@@ -163,7 +202,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * return a list of errors related to the form and its fields.
      *
-     * @return mixed
+     * @return ErrorDict
      *
      * @since 1.1.0
      *
@@ -171,7 +210,8 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function errors()
     {
-        if (empty($this->errors)):
+
+        if ($this->errors->isEmpty()):
             $this->fullClean();
         endif;
 
@@ -219,8 +259,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function fullClean()
     {
-        $this->errors = [];
-
         if (!$this->isBound):
             return;
         endif;
@@ -255,7 +293,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      *
      * @return mixed
      *
-     * @throws KeyError
+     * @throws FieldDoesNotExist
      *
      * @since 1.0.0
      *
@@ -263,11 +301,10 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function getField($field_name)
     {
-        if ((array_key_exists(strtolower($field_name), $this->fields))):
-            return $this->fieldsCache[strtolower($field_name)];
+        if (ArrayHelper::hasKey($this->fieldsCache, strtolower($field_name))):
+            return ArrayHelper::getValue($this->fieldsCache, strtolower($field_name));
         endif;
-
-        throw new KeyError(sprintf('Field %1$s not found in %2$s', $field_name, static::class));
+        throw new FieldDoesNotExist(sprintf('Field "%s" not found in "%s" ', $field_name, static::class));
     }
 
     /**
@@ -311,13 +348,12 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endif;
 
         if (!$name):
-            // todo store non field errors as arrays, current can only store one non field per form
             $name = self::nonFieldErrors;
         endif;
 
         $this->errors[$name] = $error->getErrorList();
 
-        if (array_key_exists($name, $this->cleanedData)) :
+        if (ArrayHelper::hasKey($this->cleanedData, $name)) :
             unset($this->cleanedData[$name]);
         endif;
 
@@ -334,19 +370,18 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             return ArrayHelper::getValue($this->errors(), self::nonFieldErrors);
         endif;
 
-        return [];
+        return ErrorList::instance([], 'nonfield');
     }
 
-    public function nonFieldErrorsAsHtml()
-    {
-        $errors = "";
-        foreach ($this->nonFieldErrors() as $nonFieldError) :
-            $errors .= sprintf("<li>%s</li>", $nonFieldError);
-        endforeach;
-
-        return $errors;
-    }
-
+    /**
+     * Returns only hidden fields.
+     *
+     * @return Field[]
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function hiddenFields()
     {
         $hiddenFields = [];
@@ -359,6 +394,15 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return $hiddenFields;
     }
 
+    /**
+     * REturns only non-hidden fields.
+     *
+     * @return Field[]
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function visibleFields()
     {
         $visibleFields = [];
@@ -390,6 +434,25 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             ]
         );
     }
+    /**
+     * Returns this form rendered as HTML <li>s -- excluding the <ul></ul>.
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
+    public function asTable()
+    {
+        return $this->getHtmlOutput(
+            [
+                'row' => '<tr><th>%s</th><td>%s%s</td></tr>',
+                'errors' => '<tr><td colspan="2">%s</td></tr>',
+                'helpText' => '<br><span class="helptext">%s</span>',
+            ]
+        );
+    }
 
     /**
      * Returns this form rendered as HTML <p>s.
@@ -413,9 +476,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     /**
      * Gets the initial value for a field.
+     *
      * @param Field $field
      * @param $fieldName
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     *
      * @return array|mixed|null
      */
     public function getInitialForField(Field $field, $fieldName)
@@ -433,33 +498,38 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return $initial;
     }
 
+    /**
+     * Clean form fields.
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     private function cleanFields()
     {
-
         foreach ($this->fieldsCache as $name => $field) :
-
             // if field has failed validation, no need to go on
-            if (array_key_exists($name, $this->errors)):
+            if (ArrayHelper::hasKey($this->errors, $name)):
                 continue;
             endif;
 
             if ($field->disabled):
                 $value = $this->getInitialForField($field, $name);
             else:
-                if (array_key_exists($name, $this->data)):
+                if (ArrayHelper::hasKey($this->data, $name)):
 
-                    $value = $field->widget->valueFromDataCollection($this->data, $name);
+                    $value = $field->widget->valueFromDataCollection($this->data, $this->files, $name);
                 else:
                     $value = $field->data();
                 endif;
             endif;
 
             try {
+
                 // run default field validations
                 $value = $field->clean($value);
-
-                // just in case,  confirm the field has not field validation already
-                if (!array_key_exists($name, $this->errors)):
+                // just in case, confirm the field has not field validation already
+                if (!ArrayHelper::hasKey($this->errors, $name)):
                     $this->cleanedData[$name] = $value;
                 endif;
 
@@ -470,9 +540,10 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $this->cleanedData[$name] = $value;
                 endif;
             } catch (ValidationError $e) {
+
                 $this->addError($name, $e);
 
-                if (array_key_exists($name, $this->cleanedData)):
+                if (ArrayHelper::hasKey($this->cleanedData, $name)):
                     unset($this->cleanedData[$name]);
                 endif;
             }
@@ -499,17 +570,28 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return empty($this->errors());
     }
 
-    protected function _is_multipart()
+    /**
+     * Returns True if the form needs to be multipart-encoded, i.e. it has FileInput. Otherwise, False.
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
+    public function isMultipart()
     {
         if (empty($this->fieldsCache)):
             return false;
         endif;
 
         foreach ($this->fieldsCache as $field) :
-            if ($field->widget->needs_multipart_form):
+            if ($field->widget->needsMultipartForm):
                 return true;
             endif;
         endforeach;
+
+        return false;
     }
 
     /**
@@ -524,6 +606,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         //todo display errros
         /* @var $field Field */
         $topErrors = $this->nonFieldErrors();
+
         $row = '';
         $errors = '';
         $helpText = '%s';
@@ -533,31 +616,43 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $hidden_output = [];
 
         foreach ($this->fieldsCache as $name => $field) :
-            $fieldErrors = '';
+            $fieldErrors = null;
 
             if ($field->getErrors()) :
+                $errs = [];
                 foreach ($field->getErrors() as $error) :
-                    $fieldErrors .= implode(", ", $error->getMessages());
+                    $errs[] = (string) $error;
                 endforeach;
+                $fieldErrors = ErrorList::instance($errs);
             endif;
 
             if ($field->isHidden()):
-                if ($fieldErrors) :
-                    $topErrors[] = sprintf('(Hidden field (%s) :: %s', $name, $fieldErrors);
+                if ($field->getErrors()) :
+                    $errs = [];
+                    foreach ($field->getErrors() as $fieldError) :
+                        $errs[] = sprintf('(Hidden field :: %s ) %s', $name, $fieldError);
+                    endforeach;
+
+                    $topErrors->extend($errs);
                 endif;
                 $hidden_output[] = $field->asWidget();
             else:
-                if ($fieldErrors) :
+                if (!$fieldErrors->isEmpty()) :
                     $output[] = sprintf($errors, $fieldErrors);
                 endif;
-                $helpTextHtml = sprintf($helpText, $field->getHelpText());
+
+                $helpTextHtml = '';
+                if($field->getHelpText()):
+                    $helpTextHtml = sprintf($helpText, $field->getHelpText());
+                endif;
+
                 $output[] = sprintf($row, $field->labelTag(), $field->asWidget(), $helpTextHtml);
             endif;
         endforeach;
 
         // add errors to the top
-        if ($topErrors) :
-            array_unshift($output, sprintf($errors, implode(", ", $topErrors)));
+        if (!$topErrors->isEmpty()) :
+            array_unshift($output, sprintf($errors, $topErrors));
         endif;
 
         // add hidden inputs to end
@@ -575,6 +670,13 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         endif;
     }
 
+    /**
+     * @return Field[]
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
     public function getIterator()
     {
         $this->setup();
@@ -598,7 +700,8 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function __get($field_name)
     {
         $this->setup();
-        if (array_key_exists($field_name, $this->fieldsCache)):
+
+        if (ArrayHelper::hasKey($this->fieldsCache, $field_name)):
             return $this->getField($field_name);
         endif;
     }
@@ -612,10 +715,24 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         try {
             $this->setup();
+
             return $this->asParagraph();
-        } catch (\Exception $e) {
-            trigger_error($e->getTraceAsString(),E_USER_ERROR);
+        } catch (\Exception $exception) {
+            Tools::convertExceptionToError($exception);
+
+            return '';
         }
-        return "";
+    }
+
+    /**
+     * Returns the field name with a prefix appended, if this Form has a prefix set.
+     *
+     * @param $name
+     *
+     * @return string
+     */
+    public function addPrefix($name)
+    {
+        return ($this->prefix) ? sprintf('%s-%s', $this->prefix, $name) : $name;
     }
 }
