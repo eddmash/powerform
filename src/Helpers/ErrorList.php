@@ -70,7 +70,8 @@ class ErrorList extends Collection
     private function asUl()
     {
         $errors = '';
-        foreach ($this->data as $error) :
+
+        foreach ($this->data as $name=>$error) :
             $errors .= sprintf('<li>%s</li>', (string) $error);
         endforeach;
 
