@@ -27,6 +27,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 {
     use FormFieldTrait;
     const nonFieldErrors = '_all_';
+    public static $csrfGuard;
 
     /**
      * Indicates if to automatically add a csrf field.
@@ -216,7 +217,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function errors()
     {
-
         if ($this->errors->isEmpty()):
             $this->fullClean();
         endif;
@@ -755,14 +755,15 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             session_start();
         endif;
 
-        if ($this->getCsrfGuard()) :
-            $token = $this->getCsrfGuard()->generateToken();
-            $csrfValue = ArrayHelper::getValue($token, 'csrf_value');
-            $this->addField(
-                ArrayHelper::getValue($token, 'csrf_name'),
-                CsrfField::instance(['initial' => $csrfValue])
-            );
+        if (!$this->getCsrfGuard()) :
+            $this->setGuard();
         endif;
+        $token = $this->getCsrfGuard()->generateToken();
+        $csrfValue = ArrayHelper::getValue($token, 'csrf_value');
+        $this->addField(
+            ArrayHelper::getValue($token, 'csrf_name'),
+            CsrfField::instance(['initial' => $csrfValue])
+        );
     }
 
     /**
@@ -771,9 +772,11 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function getCsrfGuard()
     {
-        if (!isset($this->csrfGuard) && $this->enableCsrf) :
-            $this->csrfGuard = new Guard();
-        endif;
-        return $this->csrfGuard;
+        return static::$csrfGuard;
+    }
+
+    private function setGuard()
+    {
+        static::$csrfGuard = new Guard();
     }
 }

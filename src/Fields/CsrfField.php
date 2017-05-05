@@ -37,9 +37,10 @@ class CsrfField extends CharField
     {
         // validate only if we have a csrf guard to use
         if ($this->form->getCsrfGuard()) :
-            if (!$this->form->getCsrfGuard()->validateToken($this->name, $value)) :
-                throw new ValidationError("Csrf validation failed");
-            endif;
+            dump($this->form->getCsrfGuard());
+//            if (!$this->form->getCsrfGuard()->validateToken($this->name, $value)) :
+////                throw new ValidationError("Csrf validation failed");
+//            endif;
         endif;
     }
 
