@@ -6,14 +6,15 @@ use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
 use Eddmash\PowerOrm\Exception\FieldDoesNotExist;
 use Eddmash\PowerOrm\Exception\FormNotReadyException;
-use Eddmash\PowerOrm\Exception\ImproperlyConfigured;
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\Form\Fields\CsrfField;
 use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Form\Helpers\ErrorDict;
 use Eddmash\PowerOrm\Form\Helpers\ErrorList;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Helpers\Tools;
+use Slim\Csrf\Guard;
 
 /**
  * Class Form.
@@ -26,6 +27,13 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 {
     use FormFieldTrait;
     const nonFieldErrors = '_all_';
+
+    /**
+     * Indicates if to automatically add a csrf field.
+     * setting this to true means this form will perfom csrf validation.
+     * @var bool
+     */
+    protected $enableCsrf = false;
 
     /**
      * @var ErrorDict
@@ -97,7 +105,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * Takes three arguments.
      *
-     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -135,7 +143,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             endforeach;
         endif;
 
-        if(is_null($this->labelSuffix)):
+        if (is_null($this->labelSuffix)):
             $this->labelSuffix = ':';
         endif;
 
@@ -174,6 +182,9 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                 $this->addField($name, $field);
             endforeach;
 
+            if ($this->enableCsrf) :
+                $this->enableCsrfProtection();
+            endif;
             $this->ready = true;
         endif;
     }
@@ -429,6 +440,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             ]
         );
     }
+
     /**
      * Returns this form rendered as HTML <li>s -- excluding the <ul></ul>.
      *
@@ -616,7 +628,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             if ($field->getErrors()) :
                 $errs = [];
                 foreach ($field->getErrors() as $error) :
-                    $errs[] = (string) $error;
+                    $errs[] = (string)$error;
                 endforeach;
                 $fieldErrors = ErrorList::instance($errs);
             endif;
@@ -637,7 +649,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                 endif;
 
                 $helpTextHtml = '';
-                if($field->getHelpText()):
+                if ($field->getHelpText()):
                     $helpTextHtml = sprintf($helpText, $field->getHelpText());
                 endif;
 
@@ -729,5 +741,39 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function addPrefix($name)
     {
         return ($this->prefix) ? sprintf('%s-%s', $this->prefix, $name) : $name;
+    }
+
+    /**
+     * Enables csrf protection for this form.
+     *
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function enableCsrfProtection()
+    {
+        // check if we have an PHP_SESSION_ACTIVE php session if not create one
+        if (session_status() === PHP_SESSION_ACTIVE) :
+            session_start();
+        endif;
+
+        if ($this->getCsrfGuard()) :
+            $token = $this->getCsrfGuard()->generateToken();
+            $csrfValue = ArrayHelper::getValue($token, 'csrf_value');
+            $this->addField(
+                ArrayHelper::getValue($token, 'csrf_name'),
+                CsrfField::instance(['initial' => $csrfValue])
+            );
+        endif;
+    }
+
+    /**
+     * @return Guard
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
+    public function getCsrfGuard()
+    {
+        if (!isset($this->csrfGuard) && $this->enableCsrf) :
+            $this->csrfGuard = new Guard();
+        endif;
+        return $this->csrfGuard;
     }
 }
