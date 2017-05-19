@@ -452,7 +452,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $attrs['id'] = $this->getAutoId();
         endif;
 
-        return (string) $widget->render($this->getHtmlName(), $this->value(), $attrs);
+        return (string) $widget->render($this->getHtmlName(), '', $attrs);
     }
 
     /**
