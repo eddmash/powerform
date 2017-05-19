@@ -34,7 +34,7 @@ class TextArea extends Widget
 
         $finalVal = '';
         if (!empty($value)):
-            $finalVal = $this->prepareValue($value);
+            $finalVal = $this->formatValue($value);
         endif;
 
         return sprintf('<textarea %s>%s</textarea>', $this->flatAttrs($finalAttrs), $finalVal);

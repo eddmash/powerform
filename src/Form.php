@@ -203,7 +203,13 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->_isReady(__METHOD__);
 
-        return $this->isBound && $this->formHasErrors();
+        $is = $this->isBound && $this->formHasErrors();
+        dump($this->isBound);
+        dump($this->formHasErrors());
+        dump($this->errors);
+        dump($this->cleanedData);
+        dump($is);
+        return $is;
     }
 
     /**
@@ -546,6 +552,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $value = call_user_func([$this, $fieldCleanMethod]);
                     $this->cleanedData[$name] = $value;
                 endif;
+
             } catch (ValidationError $e) {
 
                 $this->addError($name, $e);
@@ -556,6 +563,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             }
 
         endforeach;
+
     }
 
     private function cleanForm()
@@ -574,7 +582,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     private function formHasErrors()
     {
-        return empty($this->errors());
+        return $this->errors()->isEmpty();
     }
 
     /**
