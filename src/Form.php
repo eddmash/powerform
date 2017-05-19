@@ -203,7 +203,13 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->_isReady(__METHOD__);
 
-        return $this->isBound && $this->formHasErrors();
+        $is = $this->isBound && $this->formHasErrors();
+        dump($this->isBound);
+        dump($this->formHasErrors());
+        dump($this->errors);
+        dump($this->cleanedData);
+        dump($is);
+        return $is;
     }
 
     /**
@@ -572,9 +578,78 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         return $initial;
     }
 
+    /**
+     * Clean form fields.
+     *
+     * @since 1.1.0
+     *
+     * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+     */
+    private function cleanFields()
+    {
+        foreach ($this->fieldsCache as $name => $field) :
+            // if field has failed validation, no need to go on
+            if (ArrayHelper::hasKey($this->errors, $name)):
+                continue;
+            endif;
+
+            if ($field->disabled):
+                $value = $this->getInitialForField($field, $name);
+            else:
+                if (ArrayHelper::hasKey($this->data, $name)):
+
+                    $value = $field->widget->valueFromDataCollection($this->data, $this->files, $name);
+                else:
+                    $value = $field->data();
+                endif;
+            endif;
+
+            try {
+
+                // run default field validations
+                $value = $field->clean($value);
+                // just in case, confirm the field has not field validation already
+                if (!ArrayHelper::hasKey($this->errors, $name)):
+                    $this->cleanedData[$name] = $value;
+                endif;
+
+                // run custom validation by user
+                $fieldCleanMethod = sprintf('clean%s', ucfirst($name));
+                if ($this->hasMethod($fieldCleanMethod)):
+                    $value = call_user_func([$this, $fieldCleanMethod]);
+                    $this->cleanedData[$name] = $value;
+                endif;
+
+            } catch (ValidationError $e) {
+
+                $this->addError($name, $e);
+
+                if (ArrayHelper::hasKey($this->cleanedData, $name)):
+                    unset($this->cleanedData[$name]);
+                endif;
+            }
+
+        endforeach;
+
+    }
+
+    private function cleanForm()
+    {
+        try {
+            $cleanData = $this->clean();
+        } catch (ValidationError $e) {
+            $cleanData = null;
+            $this->addError(null, $e);
+        }
+
+        if ($cleanData):
+            $this->cleanedData = $cleanData;
+        endif;
+    }
+
     private function formHasErrors()
     {
-        return empty($this->errors());
+        return $this->errors()->isEmpty();
     }
 
     /**

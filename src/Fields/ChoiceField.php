@@ -11,6 +11,7 @@ namespace Eddmash\PowerOrm\Form\Fields;
 use Eddmash\PowerOrm\Form\Widgets\MultipleCheckboxes;
 use Eddmash\PowerOrm\Form\Widgets\Select;
 use Eddmash\PowerOrm\Form\Widgets\SelectMultiple;
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
 
 /**
  * Creates a :
@@ -39,12 +40,17 @@ use Eddmash\PowerOrm\Form\Widgets\SelectMultiple;
  */
 class ChoiceField extends Field
 {
-    public $choices = [];
+    protected $choices = [];
+
+    public $defaultErrorMessages = [
+        'invalid_choice'=> 'Select a valid choice. %(value)s is not one of the available choices.'
+    ];
 
     public function __construct($opts = [])
     {
+        $choices = ArrayHelper::pop($opts, 'choices', []);
         parent::__construct($opts);
-        $this->widget->choices = $this->choices;
+        $this->setChoices($choices);
     }
 
     /**
@@ -63,5 +69,25 @@ class ChoiceField extends Field
     public function getWidget()
     {
         return Select::instance();
+    }
+
+    /**
+     * @return array
+     */
+    public function getChoices()
+    {
+        return $this->choices;
+    }
+
+    /**
+     * @param array $choices
+     */
+    public function setChoices($choices)
+    {
+        if (is_callable($choices)) :
+            $choices = call_user_func($choices);
+        endif;
+
+        $this->widget->choices = $this->choices = $choices;
     }
 }

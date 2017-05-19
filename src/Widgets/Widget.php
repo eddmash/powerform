@@ -67,7 +67,7 @@ abstract class Widget extends BaseObject
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
      */
-    public function prepareValue($value)
+    public function formatValue($value)
     {
         return $value;
     }

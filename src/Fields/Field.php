@@ -50,6 +50,10 @@ use Eddmash\PowerOrm\Helpers\Tools;
  */
 abstract class Field extends BaseObject implements ContributorInterface
 {
+    public $errorMessages;
+    public $code;
+    public $defaultErrorMessages = ['required'=>'This field is required.'];
+
     /**
      * @var Form
      */
@@ -138,6 +142,9 @@ abstract class Field extends BaseObject implements ContributorInterface
         endif;
 
         $this->validators = array_merge($this->getDefaultValidators(), $this->validators);
+
+        // todo get from parent
+        $this->errorMessages = $this->defaultErrorMessages;
     }
 
     public static function instance($opts = [])
@@ -507,6 +514,7 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
         return $this->widget->isHidden();
     }
+
 
     public function __toString()
     {

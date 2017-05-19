@@ -27,6 +27,7 @@ function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
         if ($exclude && in_array($concreteField->getName(), $exclude)) :
             continue;
         endif;
+
         $values[$concreteField->getName()] = $concreteField->valueFromObject($model);
     endforeach;
 
@@ -102,6 +103,7 @@ function populateModelInstance(Model $model, Form $form)
         if (!ArrayHelper::hasKey($form->cleanedData, $field->getName()) || $field instanceof AutoField) :
             continue;
         endif;
+
         $field->saveFromForm($model, $form->cleanedData[$field->getName()]);
     endforeach;
 
@@ -288,7 +290,7 @@ abstract class ModelForm extends Form
     {
         $modelInstance = $this->modelInstance;
 
-        if ($this->errors()) :
+        if (!$this->errors()->isEmpty()) :
             throw new ValueError(
                 sprintf(
                     "The %s could not be %s because the data didn't validate.",

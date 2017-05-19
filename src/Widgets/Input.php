@@ -28,7 +28,7 @@ abstract class Input extends Widget
         $finalAttrs = $this->buildAttrs($attrs, ['type' => $this->inputType, 'name' => $name]);
         // if we have value , add it
         if (!empty($value)):
-            $finalAttrs['value'] = $this->prepareValue($value);
+            $finalAttrs['value'] = $this->formatValue($value);
         endif;
 
         return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
