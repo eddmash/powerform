@@ -163,11 +163,11 @@ abstract class ModelForm extends Form
 
     }
 
+    /**{@inheritdoc}*/
     public function setup()
     {
-
         $fields = fieldsFromModel(
-            $this->modelInstance,
+            $this->getModel(),
             $this->modelFields,
             $this->excludes,
             $this->widgets(),
@@ -187,6 +187,7 @@ abstract class ModelForm extends Form
 
         parent::setup();
     }
+
 
     /**
      * Widgets to use on the fields.
@@ -234,7 +235,7 @@ abstract class ModelForm extends Form
      * @return Model
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
-    public function getModel()
+    private function getModel()
     {
         return BaseOrm::getRegistry()->getModel($this->getModelClass());
     }
