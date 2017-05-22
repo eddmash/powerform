@@ -484,7 +484,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     public function data()
     {
-        return $this->widget->valueFromDataCollection($this->form->data, $this->form->files, $this->getHtmlName());
+        return $this->widget->valueFromDataCollection($this->form->data, $this->form->files, $this->name);
     }
 
     /**

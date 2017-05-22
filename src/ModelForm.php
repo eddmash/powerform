@@ -15,6 +15,7 @@ use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Model\Field\AutoField;
 use Eddmash\PowerOrm\Model\Field\Field;
+use Eddmash\PowerOrm\Model\Field\ManyToManyField;
 use Eddmash\PowerOrm\Model\Model;
 
 /**
@@ -29,7 +30,7 @@ use Eddmash\PowerOrm\Model\Model;
  */
 function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
 {
-    /**@var $modelFields Field[]*/
+    /**@var $modelFields Field[] */
     $modelFields = $model->meta->getConcreteFields();
     $modelFields = array_merge($modelFields, $model->meta->localManyToMany);
     $values = [];
@@ -94,7 +95,7 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
             $kwargs['fieldClass'] = $fieldClasses[$name];
         endif;
 
-        if($fieldClass = $field->formfield($kwargs)):
+        if ($fieldClass = $field->formfield($kwargs)):
 
             $fields[$name] = $fieldClass;
         endif;
@@ -115,7 +116,9 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
 function populateModelInstance(Model $model, Form $form)
 {
     foreach ($model->meta->getFields() as $field) :
-        if (!ArrayHelper::hasKey($form->cleanedData, $field->getName()) || $field instanceof AutoField) :
+        if (!ArrayHelper::hasKey($form->cleanedData, $field->getName()) || $field instanceof AutoField || $field
+            instanceof ManyToManyField
+        ) :
             continue;
         endif;
 
@@ -178,7 +181,7 @@ abstract class ModelForm extends Form
 
     }
 
-    /**{@inheritdoc}*/
+    /**{@inheritdoc} */
     public function setup()
     {
         $fields = fieldsFromModel(
@@ -323,9 +326,32 @@ abstract class ModelForm extends Form
         return $modelInstance;
     }
 
+    /**
+     * Save the many-to-many fields for this form.
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
     private function saveM2M()
     {
+        $fields = $this->modelInstance->meta->localManyToMany;
+        $includeFields = $this->modelFields;
+        $excludeFields = $this->excludes;
+        $cleanData = $this->cleanedData;
 
+        foreach ($fields as $field) :
+            if (!method_exists($field, 'saveFromForm')) :
+                continue;
+            endif;
+            if ($this->modelFields && !in_array($field->getName(), $includeFields)) :
+                continue;
+            endif;
+            if ($this->excludes && in_array($field->getName(), $excludeFields)) :
+                continue;
+            endif;
+            
+            if (array_key_exists($field->getName(), $cleanData)) :
+                $field->saveFromForm($this->modelInstance, $cleanData[$field->getName()]);
+            endif;
+        endforeach;
     }
 
 }

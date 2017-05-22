@@ -17,6 +17,7 @@ use Eddmash\PowerOrm\Exception\ObjectDoesNotExist;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Helpers\ModelChoiceIterator;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
+use Eddmash\PowerOrm\Model\Query\Queryset;
 
 class ModelChoiceField extends ChoiceField
 {
@@ -32,6 +33,10 @@ class ModelChoiceField extends ChoiceField
      * @var
      */
     public $labelField;
+
+    /**
+     * @var Queryset
+     */
     public $queryset;
 
     public $modelIteratorClass;
