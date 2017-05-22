@@ -21,7 +21,9 @@
     "php": ">=5.4.0",
     "eddmash/powerorm": "1.1.0.x-dev",
     "respect/validation": "^1.1",
-    "slim/csrf": "^0.8.1"
+    "slim/csrf": "^0.8.1",
+    "symfony/polyfill-mbstring": "~1.0",
+    "symfony/polyfill-php71": "^1.3"
   },
   "require-dev": {
   },

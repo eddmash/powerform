@@ -203,13 +203,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     {
         $this->_isReady(__METHOD__);
 
-        $is = $this->isBound && $this->formHasErrors();
-        dump($this->isBound);
-        dump($this->formHasErrors());
-        dump($this->errors);
-        dump($this->cleanedData);
-        dump($is);
-        return $is;
+        return $this->isBound && $this->formHasErrors();
     }
 
     /**

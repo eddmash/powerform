@@ -79,7 +79,7 @@ class ModelChoiceField extends ChoiceField
                     return $value->{$this->valueField};
                 }
             else:
-                return $value->meta->primaryKey;
+                return $value->pk;
             endif;
         endif;
 

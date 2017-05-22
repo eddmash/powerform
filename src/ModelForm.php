@@ -12,15 +12,29 @@ use Eddmash\PowerOrm\BaseOrm;
 use Eddmash\PowerOrm\Exception\ImproperlyConfigured;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Exception\ValueError;
-use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Model\Field\AutoField;
+use Eddmash\PowerOrm\Model\Field\Field;
 use Eddmash\PowerOrm\Model\Model;
 
+/**
+ * Gets the values for a model field.
+ * @param Model $model
+ * @param array $fields
+ * @param array $exclude
+ * @return array
+ * @since 1.1.0
+ *
+ * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
+ */
 function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
 {
+    /**@var $modelFields Field[]*/
+    $modelFields = $model->meta->getConcreteFields();
+    $modelFields = array_merge($modelFields, $model->meta->localManyToMany);
     $values = [];
-    foreach ($model->meta->getConcreteFields() as $concreteField) :
+
+    foreach ($modelFields as $concreteField) :
         if ($fields && !in_array($concreteField->getName(), $fields)) :
             continue;
         endif;
@@ -52,6 +66,7 @@ function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
 function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $labels, $helpTexts, $fieldClasses)
 {
     $modelFields = $model->meta->getConcreteFields();
+    $modelFields = array_merge($modelFields, $model->meta->localManyToMany);
     $fields = [];
     foreach ($modelFields as $name => $field) :
         if (in_array($name, $excludes)):
