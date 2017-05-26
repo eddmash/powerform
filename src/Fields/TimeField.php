@@ -12,15 +12,15 @@ namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\BaseOrm;
 use Eddmash\PowerOrm\Exception\ValidationError;
-use Eddmash\PowerOrm\Form\Widgets\DateInput;
+use Eddmash\PowerOrm\Form\Widgets\TimeInput;
 
-class DateField extends Field
+class TimeField extends DateField
 {
-    public $defaultErrorMessages = ['invalid' => 'Enter a valid date.'];
+    public $defaultErrorMessages = ['invalid'=>'Enter a valid time.'];
 
     public function getWidget()
     {
-        return DateInput::instance();
+        return TimeInput::instance();
     }
 
     public function toPhp($value)
@@ -32,9 +32,11 @@ class DateField extends Field
         elseif (is_string($value)):
 
             //todo accept more than one formsts
-            $formats = BaseOrm::getInstance()->dateFormats;
+            $formats = BaseOrm::getInstance()->timeFormats;
             foreach ($formats as $format) :
-                if ($date = \DateTime::createFromFormat($format, $value)):
+                dump($format);
+                if($date = \DateTime::createFromFormat($format, $value)):
+                    dump($date);
                     return $date;
                 endif;
             endforeach;

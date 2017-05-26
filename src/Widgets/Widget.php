@@ -41,11 +41,10 @@ abstract class Widget extends BaseObject
 
     public function buildAttrs($baseAttrs = [], $extraAttrs = [])
     {
-
         $finalAttrs = array_merge($this->attrs, $extraAttrs);
 
         if (!empty($baseAttrs)):
-            $finalAttrs = array_merge($finalAttrs, $baseAttrs);
+            $finalAttrs = array_merge($baseAttrs, $finalAttrs);
         endif;
 
         return $finalAttrs;
@@ -121,4 +120,5 @@ abstract class Widget extends BaseObject
     {
         return $id;
     }
+
 }

@@ -10,11 +10,11 @@ use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\CsrfField;
 use Eddmash\PowerOrm\Form\Fields\Field;
+use Eddmash\PowerOrm\Form\Fields\MultiInputField;
 use Eddmash\PowerOrm\Form\Helpers\ErrorDict;
 use Eddmash\PowerOrm\Form\Helpers\ErrorList;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Helpers\Tools;
-use Slim\Csrf\Guard;
 
 /**
  * Class Form.
@@ -354,6 +354,8 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     private function cleanFields()
     {
+        dump($this->data);
+
         foreach ($this->fieldsCache as $name => $field) :
             // if field has failed validation, no need to go on
             if (ArrayHelper::hasKey($this->errors, $name)):
@@ -370,7 +372,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $value = $field->data();
                 endif;
             endif;
-
             try {
 
                 // run default field validations
@@ -750,16 +751,15 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function enableCsrfProtection()
     {
-        $token = CsrfManager::getGuard()->generateToken();
-        $csrfValue = ArrayHelper::getValue($token, 'csrf_value');
         $this->addField(
-            ArrayHelper::getValue($token, 'csrf_name'),
-            CsrfField::instance(['initial' => $csrfValue])
+            "csrf",
+            CsrfField::instance()
         );
+
     }
 
-    public function getCsrfGuard()
+    public function csrfIsEnabled()
     {
-        return CsrfManager::getGuard();
+        return $this->enableCsrf;
     }
 }

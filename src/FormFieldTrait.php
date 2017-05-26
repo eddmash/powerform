@@ -15,6 +15,10 @@ trait FormFieldTrait
     {
         return new FormFields\DateField($attrs);
     }
+    public static function SplitDateTimeField($attrs = [])
+    {
+        return new FormFields\SplitDateTimeField($attrs);
+    }
 
     public static function IntegerField($attrs = [])
     {

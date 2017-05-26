@@ -17,17 +17,16 @@ use Slim\Csrf\Guard;
 class CsrfManager
 {
     private static $instance;
-    public static $guards;
 
     /**
      * @inheritDoc
      */
     private function __construct()
     {
-        if(!isset($_SESSION)):
+        // start session just incase.
+        if (!isset($_SESSION)):
             session_start();
         endif;
-        static::$guards =  new Guard();
     }
 
 
@@ -39,21 +38,32 @@ class CsrfManager
      */
     public static function instance()
     {
-        if(!static::$instance):
+        if (!static::$instance):
             static::$instance = new static();
         endif;
 
         return static::$instance;
     }
 
+    /**
+     * @return Guard
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
     private function guard()
     {
-        return static::$guards;
+        $slimGuard = new Guard();
+        $slimGuard->validateStorage();
+        return $slimGuard;
     }
 
+    /**
+     * @return Guard
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
     public static function getGuard()
     {
         return static::instance()->guard();
     }
+
 
 }

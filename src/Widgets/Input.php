@@ -25,12 +25,18 @@ abstract class Input extends Widget
      */
     public function render($name, $value, $attrs = [])
     {
+        $finalAttrs = $this->getFinalAttrs($name, $value, $attrs);
+        return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
+    }
+
+    public function getFinalAttrs($name, $value, $attrs = [])
+    {
         $finalAttrs = $this->buildAttrs($attrs, ['type' => $this->inputType, 'name' => $name]);
         // if we have value , add it
         if (!empty($value)):
             $finalAttrs['value'] = $this->formatValue($value);
         endif;
 
-        return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
+        return $finalAttrs;
     }
 }

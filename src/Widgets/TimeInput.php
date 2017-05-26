@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the ci4 package.
  *
@@ -9,10 +8,11 @@
  * file that was distributed with this source code.
  */
 
+
 namespace Eddmash\PowerOrm\Form\Widgets;
 
 
-class MultipleInput
+class TimeInput extends DateInput
 {
-
+    public $inputType = 'time';
 }

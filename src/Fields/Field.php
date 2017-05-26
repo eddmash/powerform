@@ -405,7 +405,7 @@ abstract class Field extends BaseObject implements ContributorInterface
     public function validate($value)
     {
         if (empty($value) && $this->required):
-            throw new ValidationError(sprintf('The field %s is required', $this->name), 'required');
+            throw new ValidationError(sprintf('The field "%s" is required', $this->name), 'required');
         endif;
     }
 
@@ -442,6 +442,13 @@ abstract class Field extends BaseObject implements ContributorInterface
         $this->label = $this->getLabelName();
     }
 
+    /**
+     * @param Widget|null $widget
+     * @param array $attrs
+     * @param null $only_initial
+     * @return string
+     * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
+     */
     public function asWidget(Widget $widget = null, $attrs = [], $only_initial = null)
     {
         if ($widget == null):

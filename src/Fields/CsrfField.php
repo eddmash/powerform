@@ -11,23 +11,31 @@
 
 namespace Eddmash\PowerOrm\Form\Fields;
 
+
 use Eddmash\PowerOrm\Exception\ValidationError;
-use Eddmash\PowerOrm\Form\Widgets\HiddenInput;
+use Eddmash\PowerOrm\Form\CsrfManager;
 
-/**
- * Creates a Csrf input.
- *
- * @package Eddmash\PowerOrm\Form\Widgets
- * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
- */
-class CsrfField extends CharField
+class CsrfField extends MultiValueField
 {
-
     public function __construct(array $attrs = [])
     {
+        $slimGuard = CsrfManager::getGuard();
+        $csrfNameKey = $slimGuard->getTokenNameKey();
+        $csrfValueKey = $slimGuard->getTokenValueKey();
+        $keyPair = $slimGuard->generateToken();
+
+        $fields=[
+            $csrfNameKey => CharField::instance(['initial' => $keyPair[$csrfNameKey]]),
+            $csrfValueKey => CharField::instance(['initial' => $keyPair[$csrfValueKey]]),
+        ];
+        $attrs['fields'] = $fields;
         parent::__construct($attrs);
+    }
 
-
+    /**{@inheritdoc}*/
+    public function compress($cleanData)
+    {
+        return $cleanData;
     }
 
     /**
@@ -35,19 +43,14 @@ class CsrfField extends CharField
      */
     public function validate($value)
     {
-        // validate only if we have a csrf guard to use
-        if ($this->form->getCsrfGuard()) :
-
-//            if (!$this->form->getCsrfGuard()->validateToken($this->name, $value)) :
-//                throw new ValidationError("Csrf validation failed");
-//            endif;
+        // validate only if we have a csrf enabled.
+        if ($this->form->csrfIsEnabled()) :
+            $slimGuard = CsrfManager::getGuard();
+            dump($value[$slimGuard->getTokenNameKey()]);
+            dump($value[$slimGuard->getTokenValueKey()]);
+            if (!$slimGuard->validateToken($value[$slimGuard->getTokenNameKey()], $value[$slimGuard->getTokenValueKey()])) :
+                throw new ValidationError("Csrf validation failed");
+            endif;
         endif;
-    }
-
-
-
-    public function getWidget()
-    {
-        return HiddenInput::instance();
     }
 }
