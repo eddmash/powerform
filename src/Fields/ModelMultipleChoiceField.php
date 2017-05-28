@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Exception\ValidationError;
@@ -44,7 +43,7 @@ class ModelMultipleChoiceField extends ModelChoiceField
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function clean($value)
     {
@@ -60,24 +59,27 @@ class ModelMultipleChoiceField extends ModelChoiceField
         endif;
         $qs = $this->checkValues($value);
         $this->runValidators($value);
+
         return $qs;
     }
 
     /**
      * Given a list of possible PK values, returns a QuerySet of the corresponding objects. Raises a ValidationError
-     * if a given value is  invalid (not a valid PK, not in the queryset, etc.)
+     * if a given value is  invalid (not a valid PK, not in the queryset, etc.).
+     *
      * @param $values
+     *
      * @return \Eddmash\PowerOrm\Model\Query\Queryset
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
     private function checkValues($values)
     {
 
-        $key = ($this->valueField)?$this->valueField:'pk';
+        $key = ($this->valueField) ? $this->valueField : 'pk';
 
-        $fkey = sprintf("%s__in",$key);
+        $fkey = sprintf('%s__in', $key);
 
-        $qs = $this->queryset->filter([$fkey=>$values]);
+        $qs = $this->queryset->filter([$fkey => $values]);
 
         $pks = [];
 //        foreach ($qs as $object) :
@@ -95,6 +97,5 @@ class ModelMultipleChoiceField extends ModelChoiceField
 
         return $qs;
     }
-
 
 }

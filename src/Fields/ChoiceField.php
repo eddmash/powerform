@@ -43,7 +43,7 @@ class ChoiceField extends Field
     protected $choices = [];
 
     public $defaultErrorMessages = [
-        'invalid_choice'=> 'Select a valid choice. %(value)s is not one of the available choices.'
+        'invalid_choice' => 'Select a valid choice. %(value)s is not one of the available choices.',
     ];
 
     public function __construct($opts = [])

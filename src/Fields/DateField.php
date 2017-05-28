@@ -14,6 +14,7 @@ use Eddmash\PowerOrm\BaseOrm;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Widgets\DateInput;
 
+//todo handle formats input by use for datefield, timefield, splitdatefield
 class DateField extends Field
 {
     public $defaultErrorMessages = ['invalid' => 'Enter a valid date.'];

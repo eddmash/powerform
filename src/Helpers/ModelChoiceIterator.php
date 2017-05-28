@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Helpers;
-
 
 use Eddmash\PowerOrm\Form\Fields\Field;
 use Eddmash\PowerOrm\Model\Model;
@@ -24,7 +22,7 @@ class ModelChoiceIterator
     private $field;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct(Field $field)
     {
@@ -33,9 +31,9 @@ class ModelChoiceIterator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    function __invoke()
+    public function __invoke()
     {
         $opts = [];
         $models = $this->queryset->all();
@@ -47,17 +45,15 @@ class ModelChoiceIterator
         return $opts;
     }
 
-
     public function choices(Model $instance)
     {
         if ($this->field->labelField) :
             $label = $instance->{$this->field->labelField};
         else:
-            $label = (string)$instance;
+            $label = (string) $instance;
         endif;
 
         return [$this->field->prepareValue($instance), $label];
     }
-
 
 }

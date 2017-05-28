@@ -11,7 +11,6 @@
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
-
 use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\NotImplemented;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
@@ -21,7 +20,7 @@ class MultiWidget extends Input
     /**
      * @var Input[]
      */
-    private $subWidgets=[];
+    private $subWidgets = [];
 
     /**
      * @param Widget[] $subWidgets
@@ -32,7 +31,7 @@ class MultiWidget extends Input
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function render($name, $value, $attrs = [])
     {
@@ -47,7 +46,7 @@ class MultiWidget extends Input
 
         $widgetHtml = [];
 
-        foreach ($this->subWidgets as $index =>$subWidget) :
+        foreach ($this->subWidgets as $index => $subWidget) :
 
             if (!is_null($type)) :
                 $subWidget->inputType = $type;
@@ -64,29 +63,31 @@ class MultiWidget extends Input
                 $widgetAttrs = $finalAttrs;
             else:
                 $widgetAttrs = $finalAttrs;
-                $widgetAttrs['id']= sprintf("%s_%s", $id, $index);
+                $widgetAttrs['id'] = sprintf('%s_%s', $id, $index);
             endif;
 
-            $widgetHtml[] =$subWidget->render($widgetName, $widgetValue, $widgetAttrs);
+            $widgetHtml[] = $subWidget->render($widgetName, $widgetValue, $widgetAttrs);
         endforeach;
-        return implode(" ", $widgetHtml);
+
+        return implode(' ', $widgetHtml);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function valueFromDataCollection($data, $files, $name)
     {
         $value = [];
-        foreach ($this->subWidgets as $index=>$subWidget) :
-            $value[$index]= parent::valueFromDataCollection($data, $files, $this->getWidgetName($name, $index));
+        foreach ($this->subWidgets as $index => $subWidget) :
+            $value[$index] = parent::valueFromDataCollection($data, $files, $this->getWidgetName($name, $index));
         endforeach;
+
         return $value;
     }
 
     public function getWidgetName($name, $widgetId)
     {
-        return sprintf("%s_%s", $name, $widgetId);
+        return sprintf('%s_%s', $name, $widgetId);
     }
 
     /**
@@ -94,6 +95,7 @@ class MultiWidget extends Input
      * valid, but not necessarily non-empty.
      *
      * @param $value
+     *
      * @throws NotImplemented
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */

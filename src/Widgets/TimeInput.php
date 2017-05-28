@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Widgets;
-
 
 class TimeInput extends DateInput
 {

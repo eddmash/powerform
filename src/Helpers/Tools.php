@@ -8,15 +8,12 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Helpers;
-
 
 use Eddmash\PowerOrm\BaseOrm;
 
 class Tools
 {
-
     public static function getDateFormats()
     {
         return BaseOrm::getInstance()->dateFormats;

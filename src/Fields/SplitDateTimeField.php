@@ -8,16 +8,15 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Fields;
 
-
+use Eddmash\PowerOrm\BaseOrm;
 
 class SplitDateTimeField extends MultiValueField
 {
     public function __construct(array $attrs = [])
     {
-        $fields=[
+        $fields = [
             DateField::instance(),
             TimeField::instance(),
         ];
@@ -26,12 +25,20 @@ class SplitDateTimeField extends MultiValueField
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function compress($cleanData)
     {
-        dump($cleanData);
-    }
+        $dateFormat = BaseOrm::getInstance()->dateFormats[0];
+        $timeFormat = BaseOrm::getInstance()->timeFormats[0];
+        $date = $cleanData[0];
+        $time = $cleanData[1];
+        if (empty($date) || empty($time)):
+            return;
+        endif;
+        $datetime = sprintf('%s %s', $date->format($dateFormat), $time->format($timeFormat));
 
+        return new \DateTime($datetime);
+    }
 
 }

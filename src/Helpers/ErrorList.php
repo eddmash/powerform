@@ -71,7 +71,7 @@ class ErrorList extends Collection
     {
         $errors = '';
 
-        foreach ($this->data as $name=>$error) :
+        foreach ($this->data as $name => $error) :
             $errors .= sprintf('<li>%s</li>', (string) $error);
         endforeach;
 

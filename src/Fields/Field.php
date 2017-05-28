@@ -52,7 +52,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 {
     public $errorMessages;
     public $code;
-    public $defaultErrorMessages = ['required'=>'This field is required.'];
+    public $defaultErrorMessages = ['required' => 'This field is required.'];
 
     /**
      * @var Form
@@ -444,8 +444,9 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     /**
      * @param Widget|null $widget
-     * @param array $attrs
-     * @param null $only_initial
+     * @param array       $attrs
+     * @param null        $only_initial
+     *
      * @return string
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
@@ -521,7 +522,6 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
         return $this->widget->isHidden();
     }
-
 
     public function __toString()
     {

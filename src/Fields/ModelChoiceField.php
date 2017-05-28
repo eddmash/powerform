@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Fields;
-
 
 use Eddmash\PowerOrm\Exception\FieldDoesNotExist;
 use Eddmash\PowerOrm\Exception\ObjectDoesNotExist;
@@ -54,9 +52,8 @@ class ModelChoiceField extends ChoiceField
         $this->setQueryset($queryset);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getChoices()
     {
@@ -72,10 +69,10 @@ class ModelChoiceField extends ChoiceField
 
     public function prepareValue($value)
     {
-        if (property_exists($value, "meta")) :
+        if (property_exists($value, 'meta')) :
             if ($this->valueField) :
                 try {
-                    /**@var $field \Eddmash\PowerOrm\Model\Field\Field */
+                    /** @var $field \Eddmash\PowerOrm\Model\Field\Field */
                     $field = $value->meta->getField($this->valueField);
 
                     // use attribute name this way we get foreignkey id instead of object
@@ -112,7 +109,7 @@ class ModelChoiceField extends ChoiceField
     public function toPhp($value)
     {
         if (empty($value)) :
-            return null;
+            return;
         endif;
 
         try {
@@ -124,6 +121,5 @@ class ModelChoiceField extends ChoiceField
 
         return $value;
     }
-
 
 }

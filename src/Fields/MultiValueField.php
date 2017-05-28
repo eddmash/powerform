@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Exception\KeyError;
@@ -20,7 +19,6 @@ use Eddmash\PowerOrm\Helpers\ArrayHelper;
 /**
  * Creates a Csrf input.
  *
- * @package Eddmash\PowerOrm\Form\Widgets
  * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
  */
 class MultiValueField extends Field
@@ -44,7 +42,7 @@ class MultiValueField extends Field
         parent::__construct($attrs);
 
         $initial = [];
-        /**@var $fields Field[] */
+        /** @var $fields Field[] */
         foreach ($fields as $index => &$field) :
             $field->defaultErrorMessages['incomplete'] = $this->errorMessages['incomplete'];
             if ($this->requireAllFields) :
@@ -62,16 +60,15 @@ class MultiValueField extends Field
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getWidget()
     {
         return MultiWidget::instance();
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function clean($value)
     {
@@ -95,8 +92,8 @@ class MultiValueField extends Field
             }
             if (empty($fieldVal)):
                 if ($this->requireAllFields):
-                    # Raise a 'required' error if the MultiValueField is
-                    # required and any field is empty.
+                    // Raise a 'required' error if the MultiValueField is
+                    // required and any field is empty.
                     if ($field->required):
                         throw new  ValidationError($this->errorMessages['required'], 'required');
                     endif;
@@ -128,7 +125,8 @@ class MultiValueField extends Field
     }
 
     /**
-     * Populates subwidgets to the main widget
+     * Populates subwidgets to the main widget.
+     *
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
     private function loadSubWidgets()
@@ -144,7 +142,9 @@ class MultiValueField extends Field
 
     /**
      * Returns a single value for the given list of values. The values can be assumed to be valid.
+     *
      * @param $cleanData
+     *
      * @throws NotImplemented
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
@@ -152,6 +152,5 @@ class MultiValueField extends Field
     {
         throw new NotImplemented('Subclasses must implement this method.');
     }
-
 
 }

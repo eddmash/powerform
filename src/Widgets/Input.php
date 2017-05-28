@@ -26,6 +26,7 @@ abstract class Input extends Widget
     public function render($name, $value, $attrs = [])
     {
         $finalAttrs = $this->getFinalAttrs($name, $value, $attrs);
+
         return sprintf('<input %s>', $this->flatAttrs($finalAttrs));
     }
 

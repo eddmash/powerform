@@ -20,17 +20,20 @@ use Eddmash\PowerOrm\Model\Model;
 
 /**
  * Gets the values for a model field.
+ *
  * @param Model $model
  * @param array $fields
  * @param array $exclude
+ *
  * @return array
+ *
  * @since 1.1.0
  *
  * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
  */
 function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
 {
-    /**@var $modelFields Field[] */
+    /** @var $modelFields Field[] */
     $modelFields = $model->meta->getConcreteFields();
     $modelFields = array_merge($modelFields, $model->meta->localManyToMany);
     $values = [];
@@ -159,7 +162,7 @@ abstract class ModelForm extends Form
             );
         endif;
 
-        if ($this->modelFields === "__all__"):
+        if ($this->modelFields === '__all__'):
             $this->modelFields = [];
         endif;
 
@@ -205,7 +208,6 @@ abstract class ModelForm extends Form
 
         parent::setup();
     }
-
 
     /**
      * Widgets to use on the fields.
@@ -328,6 +330,7 @@ abstract class ModelForm extends Form
 
     /**
      * Save the many-to-many fields for this form.
+     *
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
      */
     private function saveM2M()
@@ -347,7 +350,7 @@ abstract class ModelForm extends Form
             if ($this->excludes && in_array($field->getName(), $excludeFields)) :
                 continue;
             endif;
-            
+
             if (array_key_exists($field->getName(), $cleanData)) :
                 $field->saveFromForm($this->modelInstance, $cleanData[$field->getName()]);
             endif;

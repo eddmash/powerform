@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Eddmash\PowerOrm\Form\Fields;
-
 
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\CsrfManager;
@@ -24,7 +22,7 @@ class CsrfField extends MultiValueField
         $csrfValueKey = $slimGuard->getTokenValueKey();
         $keyPair = $slimGuard->generateToken();
 
-        $fields=[
+        $fields = [
             $csrfNameKey => CharField::instance(['initial' => $keyPair[$csrfNameKey]]),
             $csrfValueKey => CharField::instance(['initial' => $keyPair[$csrfValueKey]]),
         ];
@@ -39,7 +37,7 @@ class CsrfField extends MultiValueField
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function validate($value)
     {
@@ -49,7 +47,7 @@ class CsrfField extends MultiValueField
             dump($value[$slimGuard->getTokenNameKey()]);
             dump($value[$slimGuard->getTokenValueKey()]);
             if (!$slimGuard->validateToken($value[$slimGuard->getTokenNameKey()], $value[$slimGuard->getTokenValueKey()])) :
-                throw new ValidationError("Csrf validation failed");
+                throw new ValidationError('Csrf validation failed');
             endif;
         endif;
     }

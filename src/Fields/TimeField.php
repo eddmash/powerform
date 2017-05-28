@@ -16,7 +16,7 @@ use Eddmash\PowerOrm\Form\Widgets\TimeInput;
 
 class TimeField extends DateField
 {
-    public $defaultErrorMessages = ['invalid'=>'Enter a valid time.'];
+    public $defaultErrorMessages = ['invalid' => 'Enter a valid time.'];
 
     public function getWidget()
     {
@@ -34,9 +34,7 @@ class TimeField extends DateField
             //todo accept more than one formsts
             $formats = BaseOrm::getInstance()->timeFormats;
             foreach ($formats as $format) :
-                dump($format);
                 if($date = \DateTime::createFromFormat($format, $value)):
-                    dump($date);
                     return $date;
                 endif;
             endforeach;

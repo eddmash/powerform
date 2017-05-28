@@ -11,7 +11,6 @@
 
 namespace Eddmash\PowerOrm\Form;
 
-
 use Slim\Csrf\Guard;
 
 class CsrfManager
@@ -19,7 +18,7 @@ class CsrfManager
     private static $instance;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     private function __construct()
     {
@@ -29,9 +28,9 @@ class CsrfManager
         endif;
     }
 
-
     /**
      * @return static
+     *
      * @since 1.1.0
      *
      * @author Eddilbert Macharia (http://eddmash.com) <edd.cowan@gmail.com>
@@ -53,6 +52,7 @@ class CsrfManager
     {
         $slimGuard = new Guard();
         $slimGuard->validateStorage();
+
         return $slimGuard;
     }
 
@@ -64,6 +64,5 @@ class CsrfManager
     {
         return static::instance()->guard();
     }
-
 
 }

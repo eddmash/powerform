@@ -10,7 +10,6 @@ use Eddmash\PowerOrm\Exception\KeyError;
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\Fields\CsrfField;
 use Eddmash\PowerOrm\Form\Fields\Field;
-use Eddmash\PowerOrm\Form\Fields\MultiInputField;
 use Eddmash\PowerOrm\Form\Helpers\ErrorDict;
 use Eddmash\PowerOrm\Form\Helpers\ErrorList;
 use Eddmash\PowerOrm\Helpers\ArrayHelper;
@@ -32,6 +31,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * Indicates if to automatically add a csrf field.
      * setting this to true means this form will perfom csrf validation.
+     *
      * @var bool
      */
     protected $enableCsrf = false;
@@ -106,7 +106,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * Takes three arguments.
      *
-     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -629,7 +629,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             if ($field->getErrors()) :
                 $errs = [];
                 foreach ($field->getErrors() as $error) :
-                    $errs[] = (string)$error;
+                    $errs[] = (string) $error;
                 endforeach;
                 $fieldErrors = ErrorList::instance($errs);
             endif;
@@ -752,7 +752,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function enableCsrfProtection()
     {
         $this->addField(
-            "csrf",
+            'csrf',
             CsrfField::instance()
         );
 
