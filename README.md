@@ -1,5 +1,4 @@
-# PowerOrmForm
-[![StyleCI](https://styleci.io/repos/89767701/shield?branch=1.1.0)](https://styleci.io/repos/89767701)
+# PowerOrmForm 
 
 [![StyleCI](https://styleci.io/repos/89767701/shield?branch=master)](https://styleci.io/repos/89767701)
 
