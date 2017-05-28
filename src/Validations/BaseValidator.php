@@ -14,9 +14,6 @@ use Eddmash\PowerOrm\BaseOrm;
 
 class BaseValidator
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct($kwargs = [])
     {
         BaseOrm::configure($this, $kwargs);

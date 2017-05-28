@@ -17,9 +17,6 @@ class CsrfManager
 {
     private static $instance;
 
-    /**
-     * {@inheritdoc}
-     */
     private function __construct()
     {
         // start session just incase.

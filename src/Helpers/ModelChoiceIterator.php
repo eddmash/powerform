@@ -21,18 +21,12 @@ class ModelChoiceIterator
      */
     private $field;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(Field $field)
     {
         $this->queryset = $field->getQueryset();
         $this->field = $field;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke()
     {
         $opts = [];
