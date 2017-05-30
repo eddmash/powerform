@@ -354,7 +354,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     private function cleanFields()
     {
-        dump($this->data);
 
         foreach ($this->fieldsCache as $name => $field) :
             // if field has failed validation, no need to go on

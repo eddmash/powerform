@@ -542,7 +542,7 @@ abstract class Field extends BaseObject implements ContributorInterface
         return $this->helpText;
     }
 
-    private function getInitial()
+    protected function getInitial()
     {
         return $this->form->getInitialForField($this, $this->name);
     }

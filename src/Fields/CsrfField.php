@@ -31,6 +31,13 @@ class CsrfField extends MultiValueField
     }
 
     /**{@inheritdoc}*/
+    public function value()
+    {
+        // with csrf we pass new values for each request so we dont need what the form passed in.
+        return $this->prepareValue($this->getInitial());
+    }
+
+    /**{@inheritdoc} */
     public function compress($cleanData)
     {
         return $cleanData;
@@ -46,7 +53,11 @@ class CsrfField extends MultiValueField
             $slimGuard = CsrfManager::getGuard();
             dump($value[$slimGuard->getTokenNameKey()]);
             dump($value[$slimGuard->getTokenValueKey()]);
-            if (!$slimGuard->validateToken($value[$slimGuard->getTokenNameKey()], $value[$slimGuard->getTokenValueKey()])) :
+            if (!$slimGuard->validateToken(
+                $value[$slimGuard->getTokenNameKey()],
+                $value[$slimGuard->getTokenValueKey()]
+            )
+            ) :
                 throw new ValidationError('Csrf validation failed');
             endif;
         endif;
