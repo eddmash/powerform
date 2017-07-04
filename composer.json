@@ -32,6 +32,11 @@
       "Eddmash\\PowerOrm\\Form\\": "src/"
     }
   },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.1.x-dev"
+    }
+  },
   "suggest": {
     "eddmash/powerormfaker": "powerormfake generates dummy data when using PowerOrm. An extension of Faker library",
     "eddmash/powerorm": "A very simple but effective php orm"
