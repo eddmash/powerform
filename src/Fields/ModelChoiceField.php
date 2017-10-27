@@ -69,7 +69,7 @@ class ModelChoiceField extends ChoiceField
 
     public function prepareValue($value)
     {
-        if (property_exists($value, 'meta')) :
+        if (is_object($value) && property_exists($value, 'meta')) :
             if ($this->valueField) :
                 try {
                     /** @var $field \Eddmash\PowerOrm\Model\Field\Field */
