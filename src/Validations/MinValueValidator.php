@@ -23,14 +23,11 @@ class MinValueValidator extends BaseValidator
      */
     public function __invoke($value)
     {
-
         if (!RespectValidator::max($this->min, $this->inclusive)->validate($value)):
             throw new ValidationError(
                 sprintf('Ensure this value is less than or equal to %s.', $this->min),
                 'minValue'
             );
         endif;
-
     }
-
 }

@@ -47,5 +47,4 @@ class DecimalField extends IntegerField
 
         return $validators;
     }
-
 }

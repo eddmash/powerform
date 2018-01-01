@@ -121,5 +121,4 @@ class ModelChoiceField extends ChoiceField
 
         return $value;
     }
-
 }

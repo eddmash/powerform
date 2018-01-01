@@ -36,5 +36,4 @@ class SlugField extends CharField
 
         return $validators;
     }
-
 }

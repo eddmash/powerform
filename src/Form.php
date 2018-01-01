@@ -151,7 +151,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         $this->errors = ErrorDict::instance();
 
         $this->setup();
-
     }
 
     /**
@@ -171,7 +170,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     public function fields()
     {
         return [];
-
     }
 
     public function setup()
@@ -283,7 +281,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     public function postClean()
     {
-
     }
 
     /**
@@ -354,7 +351,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
      */
     private function cleanFields()
     {
-
         foreach ($this->fieldsCache as $name => $field) :
             // if field has failed validation, no need to go on
             if (ArrayHelper::hasKey($this->errors, $name)):
@@ -372,7 +368,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                 endif;
             endif;
             try {
-
                 // run default field validations
                 $value = $field->clean($value);
                 // just in case, confirm the field has not field validation already
@@ -387,7 +382,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
                     $this->cleanedData[$name] = $value;
                 endif;
             } catch (ValidationError $e) {
-
                 $this->addError($name, $e);
 
                 if (ArrayHelper::hasKey($this->cleanedData, $name)):
@@ -414,7 +408,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
 
     public function addError($name, $error)
     {
-
         // for consistency convert them to a validation error object
         if (!$error instanceof ValidationError):
             $error = new ValidationError($error);
@@ -429,7 +422,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
         if (ArrayHelper::hasKey($this->cleanedData, $name)) :
             unset($this->cleanedData[$name]);
         endif;
-
     }
 
     public function addField($name, $field)
@@ -754,7 +746,6 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             'csrf',
             CsrfField::instance()
         );
-
     }
 
     public function csrfIsEnabled()

@@ -43,5 +43,4 @@ class DateField extends Field
         endif;
         throw new ValidationError($this->errorMessages['invalid'], 'invalid');
     }
-
 }

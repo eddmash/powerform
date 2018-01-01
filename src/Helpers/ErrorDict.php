@@ -90,11 +90,9 @@ class ErrorDict extends Collection
     {
         $err = [];
         foreach ($this->data as $name => $datum) {
-
             $err[$name] = $datum;
         }
 
         return $err;
     }
-
 }

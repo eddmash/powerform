@@ -49,5 +49,4 @@ class ModelChoiceIterator
 
         return [$this->field->prepareValue($instance), $label];
     }
-
 }

@@ -49,7 +49,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Retrieve an external iterator.
      *
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @see http://php.net/manual/en/iteratoraggregate.getiterator.php
      *
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
      *                     <b>Traversable</b>
@@ -64,7 +64,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Count elements of an object.
      *
-     * @link http://php.net/manual/en/countable.count.php
+     * @see http://php.net/manual/en/countable.count.php
      *
      * @return int The custom count as an integer.
      *             </p>
@@ -100,7 +100,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Whether a offset exists.
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @see http://php.net/manual/en/arrayaccess.offsetexists.php
      *
      * @param mixed $offset <p>
      *                      An offset to check for.
@@ -121,7 +121,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Offset to retrieve.
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @see http://php.net/manual/en/arrayaccess.offsetget.php
      *
      * @param mixed $offset <p>
      *                      The offset to retrieve.
@@ -139,7 +139,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Offset to set.
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @see http://php.net/manual/en/arrayaccess.offsetset.php
      *
      * @param mixed $offset <p>
      *                      The offset to assign the value to.
@@ -158,7 +158,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Offset to unset.
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @see http://php.net/manual/en/arrayaccess.offsetunset.php
      *
      * @param mixed $offset <p>
      *                      The offset to unset.
@@ -170,5 +170,4 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
     {
         unset($this->data[$offset]);
     }
-
 }

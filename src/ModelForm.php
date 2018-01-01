@@ -147,7 +147,6 @@ abstract class ModelForm extends Form
      */
     public function __construct($kwargs = [])
     {
-
         if (is_null($this->getModelClass())):
             throw new ValueError('ModelForm has no model class specified.');
         endif;
@@ -162,7 +161,7 @@ abstract class ModelForm extends Form
             );
         endif;
 
-        if ($this->modelFields === '__all__'):
+        if ('__all__' === $this->modelFields):
             $this->modelFields = [];
         endif;
 
@@ -181,7 +180,6 @@ abstract class ModelForm extends Form
         $kwargs['initial'] = $initial;
 
         parent::__construct($kwargs);
-
     }
 
     /**{@inheritdoc} */
@@ -356,5 +354,4 @@ abstract class ModelForm extends Form
             endif;
         endforeach;
     }
-
 }

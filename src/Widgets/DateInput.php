@@ -29,6 +29,5 @@ class DateInput extends TextInput
         endif;
 
         return $value;
-
     }
 }

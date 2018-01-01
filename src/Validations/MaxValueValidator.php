@@ -23,7 +23,6 @@ class MaxValueValidator extends BaseValidator
      */
     public function __invoke($value)
     {
-
         if (!RespectValidator::max($this->max, $this->inclusive)->validate($value)):
             throw new ValidationError(
                 sprintf('Ensure this value is less than or equal to %s ', $this->max),
@@ -31,5 +30,4 @@ class MaxValueValidator extends BaseValidator
             );
         endif;
     }
-
 }

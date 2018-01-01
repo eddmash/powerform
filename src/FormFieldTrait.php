@@ -11,10 +11,12 @@ trait FormFieldTrait
     {
         return new FormFields\CharField($attrs);
     }
+
     public static function DateField($attrs = [])
     {
         return new FormFields\DateField($attrs);
     }
+
     public static function SplitDateTimeField($attrs = [])
     {
         return new FormFields\SplitDateTimeField($attrs);
@@ -29,6 +31,7 @@ trait FormFieldTrait
     {
         return new FormFields\EmailField($attrs);
     }
+
     public static function SlugField($attrs = [])
     {
         return new FormFields\SlugField($attrs);

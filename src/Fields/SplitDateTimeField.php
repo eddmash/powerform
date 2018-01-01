@@ -40,5 +40,4 @@ class SplitDateTimeField extends MultiValueField
 
         return new \DateTime($datetime);
     }
-
 }
