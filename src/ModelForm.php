@@ -34,8 +34,8 @@ use Eddmash\PowerOrm\Model\Model;
 function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
 {
     /** @var $modelFields Field[] */
-    $modelFields = $model->meta->getConcreteFields();
-    $modelFields = array_merge($modelFields, $model->meta->localManyToMany);
+    $modelFields = $model->getMeta()->getConcreteFields();
+    $modelFields = array_merge($modelFields, $model->getMeta()->localManyToMany);
     $values = [];
 
     foreach ($modelFields as $concreteField) :
@@ -69,8 +69,8 @@ function getValuesFromModelInstance(Model $model, array $fields, array $exclude)
  */
 function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $labels, $helpTexts, $fieldClasses)
 {
-    $modelFields = $model->meta->getConcreteFields();
-    $modelFields = array_merge($modelFields, $model->meta->localManyToMany);
+    $modelFields = $model->getMeta()->getConcreteFields();
+    $modelFields = array_merge($modelFields, $model->getMeta()->localManyToMany);
     $fields = [];
     foreach ($modelFields as $name => $field) :
         if (in_array($name, $excludes)):
@@ -118,7 +118,7 @@ function fieldsFromModel(Model $model, $requiredFields, $excludes, $widgets, $la
  */
 function populateModelInstance(Model $model, Form $form)
 {
-    foreach ($model->meta->getFields() as $field) :
+    foreach ($model->getMeta()->getFields() as $field) :
         if (!ArrayHelper::hasKey($form->cleanedData, $field->getName()) || $field instanceof AutoField || $field
             instanceof ManyToManyField
         ) :
@@ -147,7 +147,6 @@ abstract class ModelForm extends Form
      */
     public function __construct($kwargs = [])
     {
-
         if (is_null($this->getModelClass())):
             throw new ValueError('ModelForm has no model class specified.');
         endif;
@@ -162,7 +161,7 @@ abstract class ModelForm extends Form
             );
         endif;
 
-        if ($this->modelFields === '__all__'):
+        if ('__all__' === $this->modelFields):
             $this->modelFields = [];
         endif;
 
@@ -181,7 +180,6 @@ abstract class ModelForm extends Form
         $kwargs['initial'] = $initial;
 
         parent::__construct($kwargs);
-
     }
 
     /**{@inheritdoc} */
@@ -315,7 +313,7 @@ abstract class ModelForm extends Form
             throw new ValueError(
                 sprintf(
                     "The %s could not be %s because the data didn't validate.",
-                    $modelInstance->meta->getModelName()
+                    $modelInstance->getMeta()->getModelName()
                 )
             );
         endif;
@@ -335,7 +333,7 @@ abstract class ModelForm extends Form
      */
     private function saveM2M()
     {
-        $fields = $this->modelInstance->meta->localManyToMany;
+        $fields = $this->modelInstance->getMeta()->localManyToMany;
         $includeFields = $this->modelFields;
         $excludeFields = $this->excludes;
         $cleanData = $this->cleanedData;
@@ -356,5 +354,4 @@ abstract class ModelForm extends Form
             endif;
         endforeach;
     }
-
 }

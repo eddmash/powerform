@@ -74,7 +74,6 @@ class ModelMultipleChoiceField extends ModelChoiceField
      */
     private function checkValues($values)
     {
-
         $key = ($this->valueField) ? $this->valueField : 'pk';
 
         $fkey = sprintf('%s__in', $key);
@@ -97,5 +96,4 @@ class ModelMultipleChoiceField extends ModelChoiceField
 
         return $qs;
     }
-
 }

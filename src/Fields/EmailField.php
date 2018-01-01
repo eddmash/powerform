@@ -38,11 +38,9 @@ class EmailField extends CharField
      */
     public function getDefaultValidators()
     {
-
         $validators = parent::getDefaultValidators();
         $validators[] = EmailValidator::instance();
 
         return $validators;
     }
-
 }

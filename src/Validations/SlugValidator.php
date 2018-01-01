@@ -27,5 +27,4 @@ class SlugValidator extends BaseValidator
             );
         endif;
     }
-
 }

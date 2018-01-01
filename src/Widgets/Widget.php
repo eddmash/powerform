@@ -90,14 +90,14 @@ abstract class Widget extends BaseObject
 
     public function isHidden()
     {
-        return (property_exists($this, 'inputType')) ? $this->inputType === 'hidden' : false;
+        return (property_exists($this, 'inputType')) ? 'hidden' === $this->inputType : false;
     }
 
     public function flatAttrs($attrs)
     {
         $strAttrs = '';
         foreach ($attrs as $key => $attr) :
-            if ($attrs === true || $attrs === false):
+            if (true === $attrs || false === $attrs):
                 $strAttrs .= ' '.$key;
             else:
                 $strAttrs .= sprintf(' %s = "%s" ', $key, $attr);
@@ -120,5 +120,4 @@ abstract class Widget extends BaseObject
     {
         return $id;
     }
-
 }

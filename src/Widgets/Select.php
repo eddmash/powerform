@@ -35,7 +35,6 @@ class Select extends Widget
 
     public function __construct($attrs = [])
     {
-
         if (ArrayHelper::hasKey($attrs, 'choices')):
             $this->choices = ArrayHelper::pop($attrs, 'choices');
         endif;

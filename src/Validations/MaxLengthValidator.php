@@ -32,5 +32,4 @@ class MaxLengthValidator extends BaseValidator
             );
         endif;
     }
-
 }

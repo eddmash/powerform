@@ -61,5 +61,4 @@ class CsrfManager
     {
         return static::instance()->guard();
     }
-
 }

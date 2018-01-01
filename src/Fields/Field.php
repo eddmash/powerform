@@ -122,7 +122,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $this->{$key} = $value;
         endforeach;
 
-        $this->initial = ($this->initial == null) ? [] : $this->initial;
+        $this->initial = (null == $this->initial) ? [] : $this->initial;
         if (is_string($this->widget)):
             $widget = $this->widget;
             $this->widget = $widget::instance();
@@ -418,7 +418,6 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function runValidators($value)
     {
-
         // collect all validation errors for this field
         $validationErrors = [];
 
@@ -452,7 +451,7 @@ abstract class Field extends BaseObject implements ContributorInterface
      */
     public function asWidget(Widget $widget = null, $attrs = [], $only_initial = null)
     {
-        if ($widget == null):
+        if (null == $widget):
             $widget = $this->widget;
         endif;
 
@@ -546,5 +545,4 @@ abstract class Field extends BaseObject implements ContributorInterface
     {
         return $this->form->getInitialForField($this, $this->name);
     }
-
 }

@@ -42,5 +42,4 @@ class TimeField extends DateField
         endif;
         throw new ValidationError($this->errorMessages['invalid'], 'invalid');
     }
-
 }

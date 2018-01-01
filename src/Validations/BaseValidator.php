@@ -10,13 +10,13 @@
 
 namespace Eddmash\PowerOrm\Form\Validations;
 
-use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Helpers\ClassHelper;
 
 class BaseValidator
 {
     public function __construct($kwargs = [])
     {
-        BaseOrm::configure($this, $kwargs);
+        ClassHelper::setAttributes($this, $kwargs);
     }
 
     public static function instance($kwargs = [])

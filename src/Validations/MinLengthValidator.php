@@ -32,5 +32,4 @@ class MinLengthValidator extends BaseValidator
             );
         endif;
     }
-
 }

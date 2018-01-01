@@ -28,5 +28,4 @@ class BooleanField extends Field
     {
         return CheckboxInput::instance();
     }
-
 }

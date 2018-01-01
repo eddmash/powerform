@@ -152,5 +152,4 @@ class MultiValueField extends Field
     {
         throw new NotImplemented('Subclasses must implement this method.');
     }
-
 }

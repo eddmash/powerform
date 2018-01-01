@@ -35,13 +35,11 @@ abstract class ChoiceInputFields extends Input
 
     public function __construct($attrs = [])
     {
-
         if (ArrayHelper::hasKey($attrs, 'choices')):
             $this->choices = ArrayHelper::pop($attrs, 'choices', []);
         endif;
 
         parent::__construct($attrs);
-
     }
 
     /**
@@ -68,7 +66,6 @@ abstract class ChoiceInputFields extends Input
 
     public function render_options($field_name, $checked_choices, $attrs = [])
     {
-
         /*
          * 'choices'=>[
          *      'gender'=> ['f'=>'Female', 'm'=>'Male' ],

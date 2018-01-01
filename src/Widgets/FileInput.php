@@ -25,5 +25,4 @@ class FileInput extends Input
     {
         return ArrayHelper::getValue($file, $name);
     }
-
 }
