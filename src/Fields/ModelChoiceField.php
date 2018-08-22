@@ -73,7 +73,7 @@ class ModelChoiceField extends ChoiceField
             if ($this->valueField) :
                 try {
                     /** @var $field \Eddmash\PowerOrm\Model\Field\Field */
-                    $field = $value->meta->getField($this->valueField);
+                    $field = $value->getMeta()->getField($this->valueField);
 
                     // use attribute name this way we get foreignkey id instead of object
                     return $value->{$field->getAttrName()};
