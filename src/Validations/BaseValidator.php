@@ -10,6 +10,8 @@
 
 namespace Eddmash\PowerOrm\Form\Validations;
 
+use Eddmash\PowerOrm\BaseOrm;
+use Eddmash\PowerOrm\Helpers\ArrayHelper;
 use Eddmash\PowerOrm\Helpers\ClassHelper;
 
 class BaseValidator

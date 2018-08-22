@@ -12,6 +12,7 @@ namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\Exception\ValidationError;
 use Eddmash\PowerOrm\Form\CsrfManager;
+use Eddmash\PowerOrm\Form\Widgets\HiddenInput;
 
 class CsrfField extends MultiValueField
 {
@@ -23,8 +24,10 @@ class CsrfField extends MultiValueField
         $keyPair = $slimGuard->generateToken();
 
         $fields = [
-            $csrfNameKey => CharField::instance(['initial' => $keyPair[$csrfNameKey]]),
-            $csrfValueKey => CharField::instance(['initial' => $keyPair[$csrfValueKey]]),
+            $csrfNameKey => CharField::instance(['initial' => $keyPair[$csrfNameKey],
+                'widget' => HiddenInput::instance()]),
+            $csrfValueKey => CharField::instance(['initial' => $keyPair[$csrfValueKey],
+                'widget' => HiddenInput::instance()]),
         ];
         $attrs['fields'] = $fields;
         parent::__construct($attrs);
