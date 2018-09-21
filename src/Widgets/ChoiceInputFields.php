@@ -88,7 +88,7 @@ abstract class ChoiceInputFields extends Input
                 'type' => $this->inputType,
             ]);
 
-            $attrs_['id'] = $attrs_['id'].'_'.$count;
+            $attrs_['id'] = $attrs_['id'] . '_' . $count;
 
             if (is_array($value)):
 

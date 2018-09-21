@@ -28,7 +28,7 @@ class MultipleCheckboxes extends ChoiceInputFields
     {
         $selected = [];
         foreach ($selected_choices as $choice) :
-            $selected[] = (string) $choice;
+            $selected[] = (string)$choice;
         endforeach;
 
         return $selected;

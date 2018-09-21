@@ -154,7 +154,7 @@ abstract class ModelForm extends Form
         if (empty($this->modelFields) && empty($this->excludes)):
             throw new ImproperlyConfigured(
                 sprintf(
-                    "Creating a ModelForm without either the 'modelFields' ".
+                    "Creating a ModelForm without either the 'modelFields' " .
                     "attribute or the 'exclude' attribute is prohibited; form %s needs updating.",
                     static::class
                 )

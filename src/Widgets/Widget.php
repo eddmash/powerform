@@ -7,8 +7,8 @@
 
 namespace Eddmash\PowerOrm\Form\Widgets;
 
-use Eddmash\PowerOrm\Exception\NotImplemented;
 use Eddmash\PowerOrm\BaseObject;
+use Eddmash\PowerOrm\Exception\NotImplemented;
 
 /**
  * base class for all widgets, should never initialized
@@ -74,7 +74,7 @@ abstract class Widget extends BaseObject
     /**
      * Individual widgets know how to handle data passed in to the form for use on the widget.
      *
-     * @param array $data  oftern will come from $_POST
+     * @param array $data oftern will come from $_POST
      * @param array $files most often will come from $_FILES
      * @param $name
      *
@@ -98,7 +98,7 @@ abstract class Widget extends BaseObject
         $strAttrs = '';
         foreach ($attrs as $key => $attr) :
             if (true === $attrs || false === $attrs):
-                $strAttrs .= ' '.$key;
+                $strAttrs .= ' ' . $key;
             else:
                 $strAttrs .= sprintf(' %s = "%s" ', $key, $attr);
             endif;

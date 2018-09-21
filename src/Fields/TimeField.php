@@ -34,7 +34,7 @@ class TimeField extends DateField
             //todo accept more than one formsts
             $formats = BaseOrm::getInstance()->timeFormats;
             foreach ($formats as $format) :
-                if($date = \DateTime::createFromFormat($format, $value)):
+                if ($date = \DateTime::createFromFormat($format, $value)):
                     return $date;
                 endif;
             endforeach;

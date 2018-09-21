@@ -106,7 +106,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
     /**
      * Takes three arguments.
      *
-     * @param array $data    the data to bind the form to and validate against, usually you will use data from the $_POST
+     * @param array $data the data to bind the form to and validate against, usually you will use data from the $_POST
      *                       but can be an associative array that has any of the form fields names as keys
      * @param array $initial this is the are initial values for the form fields usually the first time the form is
      *                       loaded i.e. unbound form, this should be an associative array where keys are the form fields names
@@ -620,7 +620,7 @@ abstract class Form extends BaseObject implements \IteratorAggregate
             if ($field->getErrors()) :
                 $errs = [];
                 foreach ($field->getErrors() as $error) :
-                    $errs[] = (string) $error;
+                    $errs[] = (string)$error;
                 endforeach;
                 $fieldErrors = ErrorList::instance($errs);
             endif;

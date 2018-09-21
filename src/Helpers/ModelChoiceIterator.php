@@ -44,7 +44,7 @@ class ModelChoiceIterator
         if ($this->field->labelField) :
             $label = $instance->{$this->field->labelField};
         else:
-            $label = (string) $instance;
+            $label = (string)$instance;
         endif;
 
         return [$this->field->prepareValue($instance), $label];

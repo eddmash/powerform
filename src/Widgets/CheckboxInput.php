@@ -58,6 +58,6 @@ class CheckboxInput extends Widget
         endif;
 
         // type cast otherwise
-        return (bool) $value;
+        return (bool)$value;
     }
 }

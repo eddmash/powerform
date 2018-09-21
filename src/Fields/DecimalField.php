@@ -26,15 +26,16 @@ class DecimalField extends IntegerField
     public function widgetAttrs(Widget $widget)
     {
         $attrs = parent::widgetAttrs($widget);
-       if($widget instanceof NumberInput && !array_key_exists('step', $widget->attrs)):
-           $step = 'any';
-           if($this->decimalPlaces):
-                $step = $this->decimalPlaces;
-           endif;
-           $attrs['step'] = $step;
-       endif;
+        if ($widget instanceof NumberInput && !array_key_exists('step', $widget->attrs)):
+            $step = 'any';
+            if ($this->decimalPlaces):
+                $step = number_format("0", $this->decimalPlaces);
+                $step = sprintf("%s1", substr_replace($step, "", -1));
+            endif;
+            $attrs['step'] = $step;
+        endif;
 
-       return $attrs;
+        return $attrs;
     }
 
     /**

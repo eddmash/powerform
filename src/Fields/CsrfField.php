@@ -30,7 +30,7 @@ class CsrfField extends MultiValueField
         parent::__construct($attrs);
     }
 
-    /**{@inheritdoc}*/
+    /**{@inheritdoc} */
     public function value()
     {
         // with csrf we pass new values for each request so we dont need what the form passed in.

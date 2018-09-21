@@ -105,7 +105,7 @@ class ModelChoiceField extends ChoiceField
         $this->widget->choices = $this->getChoices();
     }
 
-    /**{@inheritdoc}*/
+    /**{@inheritdoc} */
     public function toPhp($value)
     {
         if (empty($value)) :

@@ -53,9 +53,9 @@ class MultiWidget extends Input
             endif;
 
             $widgetName = $this->getWidgetName($name, $index);
-            try{
+            try {
                 $widgetValue = ArrayHelper::getValue($value, $index, ArrayHelper::STRICT);
-            }catch (KeyError $keyError){
+            } catch (KeyError $keyError) {
                 $widgetValue = null;
             }
 

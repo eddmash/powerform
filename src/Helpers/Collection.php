@@ -144,7 +144,7 @@ abstract class Collection implements \Countable, \IteratorAggregate, \ArrayAcces
      * @param mixed $offset <p>
      *                      The offset to assign the value to.
      *                      </p>
-     * @param mixed $value  <p>
+     * @param mixed $value <p>
      *                      The value to set.
      *                      </p>
      *
