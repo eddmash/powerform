@@ -9,8 +9,8 @@ namespace Eddmash\PowerOrm\Form\Fields;
 
 use Eddmash\PowerOrm\BaseObject;
 use Eddmash\PowerOrm\ContributorInterface;
-use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Exception\ValidationError;
+use Eddmash\PowerOrm\Exception\ValueError;
 use Eddmash\PowerOrm\Form\Form;
 use Eddmash\PowerOrm\Form\Helpers\ErrorList;
 use Eddmash\PowerOrm\Form\Widgets\TextInput;
@@ -342,7 +342,7 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     /**
      * @param string $name
-     * @param Form   $object
+     * @param Form $object
      *
      * @since 1.1.0
      *
@@ -443,8 +443,8 @@ abstract class Field extends BaseObject implements ContributorInterface
 
     /**
      * @param Widget|null $widget
-     * @param array       $attrs
-     * @param null        $only_initial
+     * @param array $attrs
+     * @param null $only_initial
      *
      * @return string
      * @author: Eddilbert Macharia (http://eddmash.com)<edd.cowan@gmail.com>
@@ -466,7 +466,7 @@ abstract class Field extends BaseObject implements ContributorInterface
             $attrs['id'] = $this->getAutoId();
         endif;
 
-        return (string) $widget->render($this->getHtmlName(), $this->value(), $attrs);
+        return (string)$widget->render($this->getHtmlName(), $this->value(), $attrs);
     }
 
     /**

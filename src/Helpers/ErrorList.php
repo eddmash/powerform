@@ -72,7 +72,7 @@ class ErrorList extends Collection
         $errors = '';
 
         foreach ($this->data as $name => $error) :
-            $errors .= sprintf('<li>%s</li>', (string) $error);
+            $errors .= sprintf('<li>%s</li>', (string)$error);
         endforeach;
 
         return sprintf('<ul class="%s">%s</ul>', $this->cssClass, $errors);

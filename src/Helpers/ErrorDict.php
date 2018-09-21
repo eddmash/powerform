@@ -63,7 +63,7 @@ class ErrorDict extends Collection
         $errors = '';
         foreach ($this->data as $datum) {
             foreach ($datum as $name => $item) {
-                $errors .= sprintf('<li>%s %s</li>', $name, (string) $item);
+                $errors .= sprintf('<li>%s %s</li>', $name, (string)$item);
             }
         }
 
